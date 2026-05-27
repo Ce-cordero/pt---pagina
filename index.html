@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberSim - Ingeniería Social</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: rgba(15, 23, 42, 0.9);
+      position: fixed;
+      width: 100%;
+      top: 0;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: #38bdf8;
+    }
+
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #e2e8f0;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #38bdf8;
+    }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      background: radial-gradient(circle at top, #1e293b, #020617);
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 70px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin-bottom: 20px;
+      color: #94a3b8;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: #0ea5e9;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1spx solid #38bdf8;
+      color: #38bdf8;
+    }
+
+    .btn-secondary:hover {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    section {
+      padding: 50px 50px;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+    }
+
+    footer {
+      padding: 30px;
+      text-align: center;
+      background: #020617;
+      color: #64748b;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CyberSecurity</h1>
+  
+</header>
+
+<section class="hero">
+  <h2>Entrena tu mente contra ataques de ingeniería social</h2>
+  <p>Aprende a detectar amenazas como phishing, smishing y más mediante simulaciones interactivas en un entorno seguro.</p>
+  <div class="buttons">
+    <button class="btn btn-primary" onclick="goLogin()">Iniciar sesión</button>
+    <button class="btn btn-secondary" onclick="goRegister()">Registrarse</button>
+  </div>
+</section>
+
+<section id="features">
+  <h2>¿Qué podrás hacer?</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Simulaciones</h3>
+      <p>Experimenta ataques de phishing, vishing y más en escenarios controlados.</p>
+    </div>
+    <div class="card">
+      <h3>Retroalimentación</h3>
+      <p>Recibe recomendaciones personalizadas después de cada simulación.</p>
+    </div>
+    <div class="card">
+      <h3>Mejora continua</h3>
+      <p>Desarrolla habilidades para detectar amenazas en la vida real.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p> UAM Cuajimalpa - Proyecto de Ciberseguridad</p>
+</footer>
+
+<script>
+ function goLogin() {
+  window.location.href = "login.html";
+}
+
+  function goRegister() {
+  window.location.href = "registro.html";
+}
+</script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
