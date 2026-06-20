@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - CyberSim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e293b, #020617);
+      color: #e2e8f0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #1e293b;
+      padding: 40px;
+      border-radius: 20px;
+      width: 380px;
+      box-shadow: 0 10px 40px rgba(24, 24, 24, 0.5);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #35b8f0;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-size: 0.9rem;
+      color: #ffffff;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      background: #0ea5e9;
+      transform: scale(1.03);
+    }
+
+    .extra {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    .extra a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+
+    .extra a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Crear cuenta</h2>
+
+  <!-- FORM -->
+  <form id="registerForm">
+
+    <div class="input-group">
+      <label>Nombre</label>
+      <input type="text" id="name" placeholder="Tu nombre" required>
+    </div>
+
+    <div class="input-group">
+      <label>Correo electrónico</label>
+      <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+    </div>
+
+    <div class="input-group">
+      <label>Contraseña</label>
+      <input type="password" id="password" placeholder="********" required>
+    </div>
+
+    <div class="input-group">
+      <label>Confirmar contraseña</label>
+      <input type="password" id="confirmPassword" placeholder="********" required>
+    </div>
+
+    <button class="btn" type="submit">Registrarse</button>
+
+  </form>
+
+  <div class="extra">
+    <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+    authDomain: "cybersecurity-1710f.firebaseapp.com",
+    projectId: "cybersecurity-1710f",
+    storageBucket: "cybersecurity-1710f.appspot.com",
+    messagingSenderId: "179436600475",
+    appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // EVENTO FORM (ENTER + BOTÓN)
+  document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    register();
+  });
+
+  function register() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password.length < 6) {
+      alert('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+       // alert("Cuenta creada 🎉");
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  }
+</script>
+
+</body>
+</html>

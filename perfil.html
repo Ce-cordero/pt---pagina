@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil - CyberSim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: #020617;
+    }
+
+    header h1 {
+      color: #38bdf8;
+      font-size: 1.4rem;
+    }
+
+    nav a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #38bdf8;
+    }
+
+    .container {
+      padding: 25px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .title h2 {
+      font-size: 1.8rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(56,189,248,0.15);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56,189,248,0.2);
+    }
+
+    .card h3 {
+      color: #38bdf8;
+      margin-bottom: 10px;
+    }
+
+    .stat {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #020617;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress {
+      height: 100%;
+      background: #38bdf8;
+    }
+
+    ul {
+      padding-left: 18px;
+      font-size: 0.9rem;
+    }
+
+    ul li {
+      margin-bottom: 6px;
+    }
+
+    .logout {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .logout button {
+      padding: 12px 25px;
+      border-radius: 10px;
+      border: none;
+      background: #ef4444;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .logout button:hover {
+      background: #dc2626;
+      transform: scale(1.05);
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CyberSim</h1>
+  <nav>
+    <a href="dashboard.html">⌂ Inicio</a>
+    <a href="simulaciones.html">⎔ Simulaciones</a>
+   <!-- <a href="resultados.html">⌸ Resultados</a> -->
+    <a href="perfil.html">⍝ Perfil</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="title">
+    <h2>Perfil del Usuario</h2>
+    <p>Progreso en simulaciones de phishing</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- PROGRESO GENERAL -->
+    <div class="card">
+      <h3>📊 Progreso General</h3>
+
+      <p>Puntos totales:</p>
+      <div class="stat" id="puntos">0</div>
+
+      <p>Tasa de éxito:</p>
+      <div class="stat" id="tasa">0%</div>
+
+      <div class="progress-bar">
+        <div class="progress" id="barra" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div class="card">
+      <h3>📈 Resultados</h3>
+
+      <p>Simulaciones exitosas:</p>
+      <div class="stat" id="exitos">0</div>
+
+      <p>Simulaciones fallidas:</p>
+      <div class="stat" id="fallos">0</div>
+    </div>
+
+    <!-- TIPOS DE SIMULACIONES -->
+    <div class="card">
+      <h3>🎯 Tipos de simulaciones</h3>
+
+      <ul>
+        <li>Phishing por correo</li>
+        <li>Phishing bancario</li>
+        <li>Phishing redes sociales</li>
+        <li>Phishing urgente</li>
+        <li>Phishing con enlaces falsos</li>
+        <li>Phishing con premios falsos</li>
+        <li>Phishing suplantación de identidad</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- CERRAR SESIÓN -->
+  <div class="logout">
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+</div>
+
+<script>
+  // SIMULACIÓN DE DATOS (luego lo puedes conectar con localStorage o backend)
+  let exitos = localStorage.getItem("exitos") || 3;
+  let fallos = localStorage.getItem("fallos") || 2;
+  let puntos = localStorage.getItem("puntos") || 30;
+
+  exitos = parseInt(exitos);
+  fallos = parseInt(fallos);
+  puntos = parseInt(puntos);
+
+  let total = exitos + fallos;
+  let tasa = total > 0 ? Math.round((exitos / total) * 100) : 0;
+
+  document.getElementById("exitos").innerText = exitos;
+  document.getElementById("fallos").innerText = fallos;
+  document.getElementById("puntos").innerText = puntos;
+  document.getElementById("tasa").innerText = tasa + "%";
+  document.getElementById("barra").style.width = tasa + "%";
+
+  function cerrarSesion() {
+    localStorage.clear();
+    window.location.href = "index.html"; // o login.html
+  }
+</script>
+
+</body>
+</html>

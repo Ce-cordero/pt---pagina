@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio - CyberSim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: #020617;
+    }
+
+    header h1 {
+      color: #38bdf8;
+      font-size: 1.4rem;
+    }
+
+    nav a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #38bdf8;
+    }
+
+    .hero {
+      padding: 30px 20px 10px;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: #94a3b8;
+      font-size: .95rem;
+    }
+
+    /* CARDS */
+    .cards {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 22px;
+      border-radius: 14px;
+      transition: 0.3s;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border: 1px solid rgba(56,189,248,0.15);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56,189,248,0.2);
+    }
+
+    .card h3 {
+      color: #38bdf8;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      color: #cbd5f5;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .card ul {
+      padding-left: 18px;
+      color: #cbd5f5;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .card ul li {
+      margin-bottom: 6px;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .cta h2 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .cta p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .cta button {
+      padding: 18px 40px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      border: none;
+      background: #38bdf8;
+      color: #0f172a;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .cta button:hover {
+      background: #19a0da;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #020617;
+      color: #64748b;
+      font-size: 0.8rem;
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CyberSim</h1>
+  <nav>
+    <a href="dashboard.html">⌂ Inicio</a>
+    <a href="simulaciones.html">⎔ Simulaciones</a>
+    <!--<a href="resultados.html">⌸ Resultados</a>  /****++ quitar posiblemente -->
+    <a href="perfil.html">⍝ Perfil</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h2>Bienvenido al Curso de Ingeniería Social</h2>
+  <p>Entrénate para identificar ataques y proteger tu información en escenarios reales.</p>
+</section>
+
+<section class="cards">
+
+  <div class="card">
+    <h3>¿Qué es la ingeniería social?</h3>
+
+    <p>
+      En ciberseguridad, el eslabón más débil suele ser el factor humano. La ingeniería social consiste en manipular a las personas para que revelen información confidencial.
+    </p>
+
+    <p>
+      A diferencia de ataques técnicos, estos engaños usan psicología: los atacantes se hacen pasar por soporte, bancos o conocidos para ganar confianza.
+    </p>
+
+    <p>
+      <i>"Es más fácil engañar a alguien para obtener su contraseña que hackear un sistema."</i>
+    </p>
+  </div>
+
+  <div class="card">
+    <h3> Ataques mas comunes</h3>
+    <p>
+      La ingeniería social no se limita a un solo método ya que evoluciona y se adapta al medio de comunicación que la víctima use más. A continuación, se presentan las modalidades más comunes que todo usuario debe conocer para no caer en la trampa:
+    </p>
+
+    <ul>
+      <li><i>Phishing:</i> Correos falsos para robar datos.</li>
+      <li><i>Smishing:</i> Ataques por SMS.</li>
+      <li><i>Vishing:</i> Llamadas falsas.</li>
+      <li><i>Pretexting:</i> Historias falsas para engañar.</li>
+      <li><i>Baiting:</i> Archivos o USB infectados.</li>
+      <li><i>Quid pro quo:</i> Ofertas falsas a cambio de datos.</li>
+      <li><i>Spear phishing:</i> Ataques personalizados.</li>
+      <li><i>QR phishing:</i> Códigos QR maliciosos.</li>
+    </ul>
+
+  </div>
+
+</section>
+
+<section class="cta">
+  <h2>¿Listo para practicar?</h2>
+  <p>Enfrenta escenarios reales y pon a prueba tus conocimientos.</p>
+  <button onclick="window.location.href='simulaciones.html'">
+    🚀 Comenzar simulaciones
+  </button>
+</section>
+
+<footer>
+  <p> UAM Cuajimalpa - Proyecto de Ciberseguridad</p>
+</footer>
+
+</body>
+</html>
