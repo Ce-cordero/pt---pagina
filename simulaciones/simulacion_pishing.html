@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Simulación de Phishing</title>
 <style>
+  
 body {
   background: #0f172a;
   color: #e5e7eb;
@@ -116,7 +117,23 @@ body {
 #opciones .btn {
   margin-top: 10px;
 }
-</style>
+
+.feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+}
+
+.correcto {
+  background: #14532d;
+}
+
+.incorrecto {
+  background: #7f1d1d;
+}
+
 </style>
 </head>
 
@@ -348,9 +365,15 @@ function responder(correcta, explicacion) {
 
   if (correcta) {
     puntos++;
-    feedback.innerHTML = "✔️ Correcto<br>" + explicacion;
+    feedback.innerHTML = `
+      <div class="feedback correcto">
+        ✅ Correcto<br>${explicacion}
+      </div>`;
   } else {
-    feedback.innerHTML = "❌ Incorrecto<br>" + explicacion;
+    feedback.innerHTML = `
+      <div class="feedback incorrecto">
+        ❌ Incorrecto<br>${explicacion}
+      </div>`;
   }
 
   setTimeout(() => {
