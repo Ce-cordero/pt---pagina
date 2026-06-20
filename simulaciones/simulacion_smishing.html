@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulación Smishing</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.box {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: auto;
+}
+
+/* 🔥 BOTONES */
+.btn {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 📱 SMS */
+.sms {
+  background: #e5e7eb;
+  color: #111827;
+  padding: 12px;
+  border-radius: 12px;
+  max-width: 320px;
+  margin: auto;
+  text-align: left;
+  font-size: 14px;
+}
+
+/* 🔥 PROGRESS BAR */
+.progress {
+  background: #334155;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  height: 10px;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #22c55e;
+  width: 0%;
+  transition: width 0.3s;
+}
+
+/* 🧠 FEEDBACK */
+.feedback {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.correcto {
+  background: #14532d;
+}
+
+.incorrecto {
+  background: #7f1d1d;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+  authDomain: "cybersecurity-1710f.firebaseapp.com",
+  projectId: "cybersecurity-1710f",
+  storageBucket: "cybersecurity-1710f.firebasestorage.app",
+  messagingSenderId: "179436600475",
+  appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+// INTRO
+function mostrarIntro() {
+  document.getElementById("app").innerHTML = `
+    <div class="box">
+     <h2>¿Qué es el Smishing?</h2>
+
+<p>
+El <b>smishing</b> es un tipo de ataque de <b>ingeniería social</b> que se realiza
+a través de <b>mensajes SMS</b> o aplicaciones de mensajería.
+</p>
+
+<p>
+La palabra proviene de la combinación de <b>"SMS"</b> y <b>"phishing"</b>,
+ya que funciona de manera similar: el atacante intenta engañarte
+para que reveles información personal o hagas clic en enlaces maliciosos.
+</p>
+
+<p>
+Generalmente, estos mensajes parecen provenir de empresas reales como
+bancos, paqueterías (DHL, FedEx), plataformas (Netflix, Amazon) o incluso
+instituciones gubernamentales.
+</p>
+
+<p>
+<b>¿Cuál es la finalidad?</b><br>
+El objetivo principal es que hagas clic en un enlace falso o proporciones
+información sensible como contraseñas, datos bancarios o códigos de verificación.
+</p>
+
+<p>
+<b>¿Para qué usan tus datos?</b><br>
+Los atacantes pueden utilizar la información robada para:
+</p>
+
+<p style="text-align:left;">
+• Vaciar cuentas bancarias<br>
+• Realizar compras sin tu autorización<br>
+• Robar tu identidad (suplantación)<br>
+• Acceder a tus redes sociales o correo<br>
+• Estafar a tus contactos haciéndose pasar por ti<br>
+• Vender tus datos en internet (dark web)<br>
+</p>
+
+<p>
+<b>Señales comunes de Smishing:</b>
+</p>
+
+<p style="text-align:left;">
+• Mensajes con urgencia ("tu cuenta será bloqueada")<br>
+• Enlaces sospechosos o acortados<br>
+• Ofertas demasiado buenas para ser verdad<br>
+• Mensajes de números desconocidos<br>
+• Errores ortográficos o dominios raros (.xyz, .top, etc.)<br>
+</p>
+
+<p>
+En esta simulación aprenderás a identificar mensajes SMS falsos
+y evitar caer en este tipo de ataques.
+</p>
+
+<button class="btn" onclick="iniciar()">
+  Comenzar simulación
+</button>
+  `;
+}
+
+
+// VARIABLES
+let indice = 0;
+let puntos = 0;
+
+// PREGUNTAS
+const preguntas = [
+{
+contenido: `
+<div class="sms">
+BBVA: Detectamos actividad sospechosa.
+Verifique su cuenta aquí:
+http://bbva-seguridad.xyz
+</div>
+<p><b>¿Qué indica este mensaje?</b></p>
+`,
+opciones: [
+{ texto: "Mensaje legítimo", correcta: false },
+{ texto: "Smishing", correcta: true }
+],
+explicacion: "El enlace usa dominio falso (.xyz), típico de fraude."
+},
+{
+contenido: `
+<div class="sms">
+DHL: Su paquete está retenido.
+Pague el envío aquí:
+http://dhl-entrega.xyz
+</div>
+<p><b>¿Qué hace sospechoso este SMS?</b></p>
+`,
+opciones: [
+{ texto: "Enlace falso", correcta: true },
+{ texto: "Mensaje normal", correcta: false }
+],
+explicacion: "Las empresas reales no usan dominios extraños."
+},
+{
+contenido: `
+<div class="sms">
+Netflix: Su cuenta será suspendida.
+Actualice su información:
+http://netflix-verificacion.xyz
+</div>
+<p><b>¿Cuál es la señal de smishing?</b></p>
+`,
+opciones: [
+{ texto: "Urgencia + link falso", correcta: true },
+{ texto: "Mensaje oficial", correcta: false }
+],
+explicacion: "La urgencia es una técnica de manipulación."
+},
+{
+contenido: `
+<div class="sms">
+Amazon: Ganaste un premio.
+Reclámalo aquí:
+http://amazon-regalo.xyz
+</div>
+<p><b>¿Qué tipo de ataque es?</b></p>
+`,
+opciones: [
+{ texto: "Smishing con recompensa", correcta: true },
+{ texto: "Promoción real", correcta: false }
+],
+explicacion: "Las ofertas irreales suelen ser fraude."
+},
+{
+contenido: `
+<div class="sms">
+BBVA: Su cuenta será bloqueada.
+Confirme aquí:
+http://BBVA-alerta.xyz
+</div>
+<p><b>¿Qué debes hacer?</b></p>
+`,
+opciones: [
+{ texto: "No hacer clic y reportar", correcta: true },
+{ texto: "Abrir el enlace", correcta: false }
+],
+explicacion: "Nunca abras enlaces sospechosos."
+}
+];
+
+
+
+// INICIAR
+window.iniciar = function() {
+  indice = 0;
+  puntos = 0;
+  mostrarPregunta();
+}
+
+// MOSTRAR PREGUNTA
+function mostrarPregunta() {
+  const p = preguntas[indice];
+  let progreso = (indice / preguntas.length) * 100;
+
+  let html = `
+  <div class="box">
+
+    <div class="progress">
+      <div class="progress-bar" style="width:${progreso}%"></div>
+    </div>
+
+    <p>Pregunta ${indice + 1} de ${preguntas.length}</p>
+
+    ${p.contenido}
+  `;
+
+  p.opciones.forEach((op, i) => {
+    html += `<button class="btn" onclick="responder(${i})">${op.texto}</button>`;
+  });
+
+  html += `<div id="feedback"></div>`;
+  html += `</div>`;
+
+  document.getElementById("app").innerHTML = html;
+}
+
+// RESPONDER
+window.responder = function(i) {
+  const p = preguntas[indice];
+  const botones = document.querySelectorAll(".btn");
+
+  botones.forEach(b => b.disabled = true);
+
+  let feedback = document.getElementById("feedback");
+
+  if (p.opciones[i].correcta) {
+    puntos++;
+    feedback.innerHTML = `
+      <div class="feedback correcto">
+        ✅ Correcto<br>${p.explicacion}
+      </div>`;
+  } else {
+    feedback.innerHTML = `
+      <div class="feedback incorrecto">
+        ❌ Incorrecto<br>${p.explicacion}
+      </div>`;
+  }
+
+  setTimeout(() => {
+    indice++;
+    if (indice < preguntas.length) {
+      mostrarPregunta();
+    } else {
+      terminar();
+    }
+  }, 2000);
+}
+// FINAL
+async function terminar() {
+
+  let nivel = "";
+
+  if (puntos === 5) nivel = "Experto 🔥";
+  else if (puntos >= 3) nivel = "Intermedio ⚠️";
+  else nivel = "Básico 🚨";
+
+  // 🔥 GUARDAR EN FIRESTORE (IGUAL QUE PHISHING)
+  try {
+    await window.setDoc(
+      window.doc(window.db, "resultados", Date.now().toString()),
+      {
+        puntos: puntos,
+        total: preguntas.length,
+        nivel: nivel,
+        fecha: new Date().toISOString()
+      }
+    );
+
+    console.log("🔥 Datos guardados en Firestore");
+  } catch (e) {
+    console.error("❌ Error guardando:", e);
+  }
+
+  // UI FINAL (IGUAL QUE PHISHING)
+  document.getElementById("app").innerHTML = `
+    <div class="box">
+      <h2>Resultado final</h2>
+      <p>Puntaje: ${puntos} / ${preguntas.length}</p>
+      <p>Nivel: ${nivel}</p>
+
+      <button class="btn" onclick="location.reload()">Reintentar</button>
+      
+      <button class="btn" onclick="window.location.href='/dashboard.html'" style="background:#475569;">
+        ⌂ Ir al inicio
+      </button>
+
+      <button class="btn" onclick="window.location.href='../simulaciones.html'" style="background:#334155;">
+        ⎔ Ver simulaciones
+      </button>
+    </div>
+  `;
+}
+
+
+// HACER GLOBAL
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+
+// INICIAR APP
+mostrarIntro();
+</script>
+
+</body>
+</html>

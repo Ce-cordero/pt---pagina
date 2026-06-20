@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulación de Phishing</title>
+<style>
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 20px;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+}
+
+.box {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* 📘 INTRO */
+.intro h2 {
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cbd5f5;
+}
+
+/* Botón general */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background: #1d4ed8;
+}
+
+/* Barra progreso */
+.progress {
+  height: 8px;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #38bdf8;
+  width: 0%;
+}
+
+/* Gmail estilo */
+.email {
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 14px;
+  color: #202124;
+  text-align: left;
+}
+
+.email-header {
+  border-bottom: 1px solid #dadce0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+/* 🔴 CORREGIDO: evita estilos de enlace */
+.email a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 🔥 BOTÓN FALSO (sin borde azul) */
+.fake-btn {
+  display: inline-block;
+  background: #1a73e8;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 🔴 ELIMINA EL RECUADRO AZUL */
+.fake-btn:focus,
+.fake-btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Opciones */
+#opciones .btn {
+  margin-top: 10px;
+}
+</style>
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app"></div>
+
+<script type="module">
+
+// ================== INTRO ==================
+function mostrarIntro() {
+  document.getElementById("app").innerHTML = `
+    <div class="box intro">
+      <h2>¿Qué es el Phishing?</h2>
+
+      <p>
+      El <b>phishing</b> es un tipo de ataque de ingeniería social en el que un atacante
+      intenta engañarte para que reveles información personal como contraseñas,
+      datos bancarios o accesos a tus cuentas.
+      </p>
+
+      <p>
+      Generalmente se presenta como correos electrónicos, mensajes o páginas falsas
+      que imitan a empresas reales como bancos, Netflix o PayPal.
+      </p>
+
+      <p>
+      <b>¿Cuál es la finalidad?</b><br>
+      El objetivo principal es robar tu información para obtener acceso no autorizado
+      a tus cuentas personales o financieras.
+      </p>
+
+      <p>
+      <b>¿Para qué usan tus datos?</b><br>
+      Los atacantes pueden utilizar la información robada para:
+      </p>
+
+      <p style="text-align:left;">
+      • Robar dinero de cuentas bancarias<br>
+      • Hacer compras en línea sin tu autorización<br>
+      • Suplantar tu identidad (robo de identidad)<br>
+      • Acceder a tus redes sociales o correo<br>
+      • Vender tus datos en el mercado negro<br>
+      </p>
+
+      <p>
+      En esta simulación aprenderás a identificar correos falsos
+      y evitar caer en estos ataques.
+      </p>
+
+      <button class="btn" onclick="iniciarSimulacion()">
+        Comenzar simulación
+      </button>
+    </div>
+  `;
+}
+
+// ================== QUIZ ==================
+let preguntas = [
+
+{
+contenido: `
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> seguridad@bbva-alerta.xyz<br>
+<strong>Asunto:</strong> Acceso bloqueado temporalmente
+</div>
+<div>
+Estimado cliente,<br><br>
+Hemos detectado un intento de acceso no autorizado a su cuenta.<br>
+Por seguridad, su acceso ha sido limitado.<br><br>
+
+<a href="#" class="fake-btn">Restablecer acceso</a>
+</div>
+</div>
+<p><b>¿Qué indica este correo?</b></p>
+`,
+opciones: [
+{ texto: "Correo legítimo", correcta: false },
+{ texto: "Phishing", correcta: true }
+],
+explicacion: "Usa urgencia y dominio falso (.xyz)."
+},
+
+{
+contenido: `
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> soporte@netflix-soporte.xyz<br>
+<strong>Asunto:</strong> Problema con tu suscripción
+</div>
+<div>
+Hola,<br><br>
+No pudimos procesar tu pago mensual.<br>
+Tu cuenta será suspendida si no actualizas tu información.<br><br>
+
+<a href="#" class="fake-btn">Actualizar método de pago</a>
+</div>
+</div>
+<p><b>¿Qué hace sospechoso este correo?</b></p>
+`,
+opciones: [
+{ texto: "Dominio falso", correcta: true },
+{ texto: "Mensaje claro", correcta: false }
+],
+explicacion: "El dominio no es oficial de Netflix."
+},
+
+{
+contenido: `
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> paypal@alerta-seguridad.xyz<br>
+<strong>Asunto:</strong> Actividad sospechosa detectada
+</div>
+<div>
+Estimado usuario,<br><br>
+Se detectó un inicio de sesión desde un dispositivo desconocido.<br>
+Si no reconoce esta actividad, verifique su cuenta inmediatamente.<br><br>
+
+<a href="#" class="fake-btn">Verificar cuenta</a>
+</div>
+</div>
+<p><b>¿Cuál es la señal de phishing?</b></p>
+`,
+opciones: [
+{ texto: "Enlace sospechoso", correcta: true },
+{ texto: "Mensaje formal", correcta: false }
+],
+explicacion: "El enlace puede redirigir a una página falsa."
+},
+
+{
+contenido: `
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> amazon@ofertas-urgentes.xyz<br>
+<strong>Asunto:</strong> Has ganado un premio
+</div>
+<div>
+Felicidades,<br><br>
+Has sido seleccionado para recibir un iPhone gratis.<br>
+Solo debes confirmar tus datos en el siguiente enlace.<br><br>
+
+<a href="#" class="fake-btn">Reclamar premio</a>
+</div>
+</div>
+<p><b>¿Qué tipo de ataque es este?</b></p>
+`,
+opciones: [
+{ texto: "Phishing (engaño con recompensa)", correcta: true },
+{ texto: "Promoción real", correcta: false }
+],
+explicacion: "Ofertas demasiado buenas suelen ser fraude."
+},
+
+{
+contenido: `
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> seguridad@banco.com<br>
+<strong>Asunto:</strong> Verificación de identidad requerida
+</div>
+<div>
+Estimado cliente,<br><br>
+Para continuar utilizando nuestros servicios, escanee el código QR adjunto<br>
+y confirme su información desde su dispositivo móvil.
+</div>
+</div>
+<p><b>¿Qué tipo de phishing es?</b></p>
+`,
+opciones: [
+{ texto: "QR phishing", correcta: true },
+{ texto: "Correo seguro", correcta: false }
+],
+explicacion: "El QR puede dirigir a sitios fraudulentos."
+}
+
+];
+
+
+// VARIABLES
+let actual = 0;
+let puntos = 0;
+
+// INICIAR QUIZ
+window.iniciarSimulacion = function () {
+  document.getElementById("app").innerHTML = `
+    <h2 id="titulo"></h2>
+    <div class="progress">
+      <div class="progress-bar" id="barra"></div>
+    </div>
+    <div class="box" id="contenido"></div>
+    <div id="opciones"></div>
+    <p id="feedback"></p>
+  `;
+  mostrarPregunta();
+};
+
+// MOSTRAR PREGUNTA
+function mostrarPregunta() {
+  let p = preguntas[actual];
+
+  document.getElementById("titulo").innerText =
+    "Simulación (" + (actual + 1) + " de " + preguntas.length + ")";
+
+  document.getElementById("contenido").innerHTML = p.contenido;
+
+  let opcionesDiv = document.getElementById("opciones");
+  opcionesDiv.innerHTML = "";
+
+  p.opciones.forEach(op => {
+    let btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = op.texto;
+    btn.onclick = () => responder(op.correcta, p.explicacion);
+    opcionesDiv.appendChild(btn);
+  });
+
+  document.getElementById("barra").style.width =
+    ((actual) / preguntas.length) * 100 + "%";
+}
+
+
+
+// RESPONDER
+function responder(correcta, explicacion) {
+  let feedback = document.getElementById("feedback");
+
+  if (correcta) {
+    puntos++;
+    feedback.innerHTML = "✔️ Correcto<br>" + explicacion;
+  } else {
+    feedback.innerHTML = "❌ Incorrecto<br>" + explicacion;
+  }
+
+  setTimeout(() => {
+    actual++;
+
+    if (actual < preguntas.length) {
+      mostrarPregunta();
+      feedback.innerHTML = "";
+    } else {
+      terminar();
+    }
+
+  }, 1500);
+}
+
+// FINAL
+async function terminar() {
+  let nivel = "";
+
+  if (puntos === 5) nivel = "Experto 🔥";
+  else if (puntos >= 3) nivel = "Intermedio ⚠️";
+  else nivel = "Básico 🚨";
+
+  // 🔥 GUARDAR EN FIRESTORE
+  try {
+   await window.setDoc(
+  window.doc(window.db, "resultados", Date.now().toString()),
+  {
+    puntos: puntos,
+    total: preguntas.length,
+    nivel: nivel,
+    fecha: new Date().toISOString()
+  }
+);
+
+    console.log("🔥 Datos guardados en Firestore");
+  } catch (e) {
+    console.error("❌ Error guardando:", e);
+  }
+
+  // UI
+  document.getElementById("app").innerHTML = `
+    <div class="box">
+      <h2>Resultado final</h2>
+      <p>Puntaje: ${puntos} / ${preguntas.length}</p>
+      <p>Nivel: ${nivel}</p>
+
+      <button class="btn" onclick="location.reload()">Reintentar</button>
+      
+      <button class="btn" onclick="window.location.href='/dashboard.html'" style="background:#475569;">
+        ⌂ Ir al inicio
+      </button>
+
+      <button class="btn" onclick="window.location.href='../simulaciones.html'" style="background:#334155;">
+        ⎔ Ver simulaciones
+      </button>
+    </div>
+  `;
+}
+
+// INICIAR
+mostrarIntro();
+
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+    authDomain: "cybersecurity-1710f.firebaseapp.com",
+    projectId: "cybersecurity-1710f",
+    storageBucket: "cybersecurity-1710f.firebasestorage.app",
+    messagingSenderId: "179436600475",
+    appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 🔥 HACER GLOBAL
+  window.db = db;
+  window.setDoc = setDoc;
+  window.doc = doc;
+</script>
+
+</body>
+</html>

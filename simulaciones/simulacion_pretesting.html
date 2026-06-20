@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>simulacion Pretesting</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.box {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.btn {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.feedback {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.correcto { background: #14532d; }
+.incorrecto { background: #7f1d1d; }
+
+.progress {
+  background: #334155;
+  height: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #22c55e;
+  width: 0%;
+}
+</style>
+</head>
+
+<body>
+<div id="app"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+// FIREBASE
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_AUTH",
+  projectId: "TU_PROJECT",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// GLOBAL
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+
+// VARIABLES
+let indice = 0;
+let puntos = 0;
+
+// PREGUNTAS
+const preguntas = [
+
+{
+contenido: `<p><b>¿Qué es phishing?</b></p>`,
+opciones: [
+{ texto: "Ataque por correo falso", correcta: true },
+{ texto: "Virus del sistema", correcta: false }
+],
+explicacion: "Phishing busca robar datos con correos falsos."
+},
+
+{
+contenido: `<p><b>¿Qué es smishing?</b></p>`,
+opciones: [
+{ texto: "Fraude por SMS", correcta: true },
+{ texto: "Ataque por WiFi", correcta: false }
+],
+explicacion: "Smishing usa mensajes SMS para engañar."
+},
+
+{
+contenido: `<p><b>¿Qué es vishing?</b></p>`,
+opciones: [
+{ texto: "Fraude por llamadas", correcta: true },
+{ texto: "Correo malicioso", correcta: false }
+],
+explicacion: "Vishing usa llamadas telefónicas."
+},
+
+{
+contenido: `<p><b>¿Qué debes hacer ante un enlace sospechoso?</b></p>`,
+opciones: [
+{ texto: "No abrirlo", correcta: true },
+{ texto: "Abrirlo rápido", correcta: false }
+],
+explicacion: "Nunca abras enlaces sospechosos."
+},
+
+{
+contenido: `<p><b>¿Qué buscan los atacantes?</b></p>`,
+opciones: [
+{ texto: "Datos personales", correcta: true },
+{ texto: "Ayudarte", correcta: false }
+],
+explicacion: "Buscan robar información."
+}
+
+];
+
+// INTRO
+function mostrarIntro() {
+  document.getElementById("app").innerHTML = `
+    <div class="box">
+     <h2>¿Qué es el Pretexting?</h2>
+
+<p>
+El <b>pretexting</b> es un tipo de ataque de <b>ingeniería social</b> en el que
+un atacante crea una historia falsa o identidad ficticia para engañar a una persona
+y obtener información confidencial.
+</p>
+
+<p>
+A diferencia de otros ataques, el pretexting se basa en la <b>manipulación psicológica</b>,
+donde el atacante gana la confianza de la víctima haciéndose pasar por alguien legítimo,
+como un empleado de banco, soporte técnico o una institución oficial.
+</p>
+
+<p>
+<b>¿Cuál es la finalidad?</b><br>
+El objetivo principal es convencerte de que proporciones datos sensibles como:
+</p>
+
+<p style="text-align:left;">
+• Contraseñas<br>
+• Información bancaria<br>
+• Datos personales<br>
+• Códigos de verificación<br>
+</p>
+
+<p>
+<b>¿Cómo te afecta?</b><br>
+Si caes en este tipo de ataque, los delincuentes pueden:
+</p>
+
+<p style="text-align:left;">
+• Robar tu identidad<br>
+• Acceder a tus cuentas<br>
+• Realizar fraudes a tu nombre<br>
+• Obtener acceso a sistemas privados<br>
+</p>
+
+<p>
+<b>¿Cómo identificar un ataque de pretexting?</b>
+</p>
+
+<p style="text-align:left;">
+• Personas que se hacen pasar por autoridades o empresas<br>
+• Solicitudes urgentes de información confidencial<br>
+• Historias creíbles pero no verificables<br>
+• Presión para actuar rápidamente<br>
+• Peticiones inusuales fuera de procesos normales<br>
+</p>
+
+<p>
+En esta simulación evaluarás tu capacidad para detectar
+cuando alguien intenta manipularte mediante un pretexto falso.
+</p>
+
+<button class="btn" onclick="iniciar()">
+  Comenzar evaluación
+</button>
+  `;
+}
+
+// START
+window.iniciar = function() {
+  indice = 0;
+  puntos = 0;
+  mostrarPregunta();
+}
+
+// PREGUNTA
+function mostrarPregunta() {
+  let p = preguntas[indice];
+  let progreso = (indice / preguntas.length) * 100;
+
+  let html = `
+  <div class="box">
+    <div class="progress">
+      <div class="progress-bar" style="width:${progreso}%"></div>
+    </div>
+
+    <p>${indice+1} / ${preguntas.length}</p>
+    ${p.contenido}
+  `;
+
+  p.opciones.forEach((op,i)=>{
+    html += `<button class="btn" onclick="responder(${i})">${op.texto}</button>`;
+  });
+
+  html += `<div id="feedback"></div></div>`;
+  document.getElementById("app").innerHTML = html;
+}
+
+// RESPUESTA
+window.responder = function(i) {
+  let p = preguntas[indice];
+  let botones = document.querySelectorAll(".btn");
+
+  botones.forEach(b=>b.disabled=true);
+
+  let fb = document.getElementById("feedback");
+
+  if(p.opciones[i].correcta){
+    puntos++;
+    fb.innerHTML = `<div class="feedback correcto">Correcto</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback incorrecto">Incorrecto</div>`;
+  }
+
+  setTimeout(()=>{
+    indice++;
+    if(indice < preguntas.length){
+      mostrarPregunta();
+    } else {
+      terminar();
+    }
+  },1500);
+}
+
+// FINAL
+async function terminar() {
+
+  let nivel = "";
+  if (puntos === 5) nivel = "Alto 🟢";
+  else if (puntos >= 3) nivel = "Medio 🟡";
+  else nivel = "Bajo 🔴";
+
+  // 🔥 GUARDAR COMO PRETEST
+  try {
+    await window.setDoc(
+      window.doc(window.db, "pretest", Date.now().toString()),
+      {
+        puntos,
+        total: preguntas.length,
+        nivel,
+        tipo: "pretest",
+        fecha: new Date().toISOString()
+      }
+    );
+  } catch(e) {
+    console.error(e);
+  }
+
+  document.getElementById("app").innerHTML = `
+  <div class="box">
+    <h2>Resultado</h2>
+    <p>${puntos} / ${preguntas.length}</p>
+    <p>${nivel}</p>
+
+    <button class="btn" onclick="location.reload()">Reintentar</button>
+
+    <button class="btn" onclick="window.location.href='simulaciones.html'">
+      Continuar a simulaciones
+    </button>
+  </div>
+  `;
+}
+
+// INIT
+mostrarIntro();
+
+</script>
+</body>
+</html>
