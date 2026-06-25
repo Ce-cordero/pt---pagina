@@ -95,8 +95,8 @@ body {
 /* 🔥 BOTÓN FALSO (sin borde azul) */
 .fake-btn {
   display: inline-block;
-  background: #1a73e8;
-  color: white;
+  background: #e8431a;
+  color: rgb(10, 10, 10);
   padding: 10px 16px;
   border-radius: 6px;
   margin-top: 10px;
@@ -198,24 +198,33 @@ let preguntas = [
 contenido: `
 <div class="email">
 <div class="email-header">
-<strong>De:</strong> seguridad@bbva-alerta.xyz<br>
-<strong>Asunto:</strong> Acceso bloqueado temporalmente
+<strong>De:</strong> UAM Unidad Cuajimalpa &lt;UAMActuBien@gmail.com&gt;<br>
+<strong>Asunto:</strong> Actualizar cuenta de correoelectronico Biembenidos a la UAM Unidad Cuajimalpa
 </div>
 <div>
-Estimado cliente,<br><br>
-Hemos detectado un intento de acceso no autorizado a su cuenta.<br>
-Por seguridad, su acceso ha sido limitado.<br><br>
+Bienbenido a la Uam Unidad Cuajimalpa<br><br>
+Nos guataria informarle de que actualmente estamos llevendo a cabo el mantenimiento programado y actualizacion de nuestra cuenta de servicio y como resultado de esta su cuenta tiene que ser suspendida<br><br>
+
+Pedimos disculpas por cualquier inconveniente causado. Para mantener su cuenta, ustes deve responder a este correo electronico de inmediato  introdusca la informacion siguiente:<br><br>
+
+ID de usuario:<br>
+Contraceña:<br><br>
+
+Si no lo hace dentro de las 72 horas imediatamente hara que que su cuenta quede desactivada de nuestra base de datos.<br><br>
+
+Gracias por usar nestros servicios.
+<br><br>
 
 <a href="#" class="fake-btn">Restablecer acceso</a>
 </div>
 </div>
-<p><b>¿Qué indica este correo?</b></p>
+<p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Correo legítimo", correcta: false },
-{ texto: "Phishing", correcta: true }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es phishing", correcta: true }
 ],
-explicacion: "Usa urgencia y dominio falso (.xyz)."
+explicacion: "Usa urgencia y dirección del remitente falso"
 },
 
 {
@@ -233,11 +242,11 @@ Tu cuenta será suspendida si no actualizas tu información.<br><br>
 <a href="#" class="fake-btn">Actualizar método de pago</a>
 </div>
 </div>
-<p><b>¿Qué hace sospechoso este correo?</b></p>
+<p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Dominio falso", correcta: true },
-{ texto: "Mensaje claro", correcta: false }
+{ texto: "Sí, es legítimo", correcta: true },
+{ texto: "No, es phishing", correcta: false }
 ],
 explicacion: "El dominio no es oficial de Netflix."
 },
@@ -257,60 +266,81 @@ Si no reconoce esta actividad, verifique su cuenta inmediatamente.<br><br>
 <a href="#" class="fake-btn">Verificar cuenta</a>
 </div>
 </div>
-<p><b>¿Cuál es la señal de phishing?</b></p>
+<p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Enlace sospechoso", correcta: true },
-{ texto: "Mensaje formal", correcta: false }
+{ texto: "Sí, es legítimo", correcta: true },
+{ texto: "No, es phishing", correcta: false }
 ],
 explicacion: "El enlace puede redirigir a una página falsa."
 },
 
 {
 contenido: `
+
 <div class="email">
 <div class="email-header">
-<strong>De:</strong> amazon@ofertas-urgentes.xyz<br>
-<strong>Asunto:</strong> Has ganado un premio
-</div>
-<div>
-Felicidades,<br><br>
-Has sido seleccionado para recibir un iPhone gratis.<br>
-Solo debes confirmar tus datos en el siguiente enlace.<br><br>
-
-<a href="#" class="fake-btn">Reclamar premio</a>
-</div>
-</div>
-<p><b>¿Qué tipo de ataque es este?</b></p>
-`,
-opciones: [
-{ texto: "Phishing (engaño con recompensa)", correcta: true },
-{ texto: "Promoción real", correcta: false }
-],
-explicacion: "Ofertas demasiado buenas suelen ser fraude."
-},
-
-{
-contenido: `
-<div class="email">
-<div class="email-header">
-<strong>De:</strong> seguridad@banco.com<br>
-<strong>Asunto:</strong> Verificación de identidad requerida
+<strong>De:</strong> no-reply@amazon.com<br>
+<strong>Asunto:</strong> Acción requerida: Verifica tu cuenta
 </div>
 <div>
 Estimado cliente,<br><br>
-Para continuar utilizando nuestros servicios, escanee el código QR adjunto<br>
-y confirme su información desde su dispositivo móvil.
+
+Detectamos un intento de inicio de sesión desde un dispositivo nuevo.<br>
+Por motivos de seguridad, es necesario verificar tu identidad para continuar utilizando tu cuenta.<br><br>
+
+Puedes hacerlo accediendo directamente desde la aplicación oficial de Amazon o escribiendo manualmente la dirección en tu navegador.<br><br>
+
+Si no realizas esta verificación, algunas funciones de tu cuenta podrían verse limitadas temporalmente.<br><br>
+
+Gracias por confiar en nuestros servicios.<br><br>
+
+<a href="#" class="fake-btn">Verificar cuenta</a>
+
 </div>
 </div>
-<p><b>¿Qué tipo de phishing es?</b></p>
+<p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "QR phishing", correcta: true },
-{ texto: "Correo seguro", correcta: false }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es phishing", correcta: true }
 ],
-explicacion: "El QR puede dirigir a sitios fraudulentos."
+explicacion: "Aunque genera urgencia, no solicita datos sensibles directamente y recomienda usar canales oficiales."
+},
+
+
+{
+contenido: `
+
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> soporte@netfIix-secure.com<br>
+<strong>Asunto:</strong> Problema con tu cuenta - acción inmediata requerida
+</div>
+<div>
+Hola,<br><br>
+Detectamos un problema con tu método de pago y tu cuenta ha sido temporalmente restringida.<br>
+Para evitar la suspensión definitiva del servicio, debes verificar tu información lo antes posible.<br><br>
+
+Por favor accede al siguiente enlace para actualizar tus datos:<br><br>
+
+<a href="#" class="fake-btn">http://www.netFlix-verificacion.com</a><br><br>
+
+Si no completas este proceso en las próximas 24 horas, tu cuenta será cancelada.<br><br>
+
+Gracias por usar nuestro servicio.
+
+</div>
+</div>
+<p><b>¿Este correo es confiable?</b></p>
+`,
+opciones: [
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es phishing", correcta: true }
+],
+explicacion: "El dominio está alterado (netfIix con 'F' mayúscula en lugar de 'f') y usa urgencia junto con un enlace sospechoso."
 }
+
 
 ];
 
@@ -376,17 +406,27 @@ function responder(correcta, explicacion) {
       </div>`;
   }
 
-  setTimeout(() => {
+  // 🔒 Desactivar botones
+  let botones = document.querySelectorAll("#opciones .btn");
+  botones.forEach(b => b.disabled = true);
+
+  // 👉 Botón siguiente
+  let siguienteBtn = document.createElement("button");
+  siguienteBtn.className = "btn";
+  siguienteBtn.innerText = "Siguiente";
+
+  siguienteBtn.onclick = () => {
     actual++;
 
     if (actual < preguntas.length) {
       mostrarPregunta();
-      feedback.innerHTML = "";
+      document.getElementById("feedback").innerHTML = "";
     } else {
       terminar();
     }
+  };
 
-  }, 1500);
+  document.getElementById("feedback").appendChild(siguienteBtn);
 }
 
 // FINAL
