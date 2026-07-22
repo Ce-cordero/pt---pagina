@@ -1,1 +1,637 @@
-<h1>hola QR</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Simulación de QRPhishing</title>
+<style>
+  
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 20px;
+   line-height: 1.5; /* 🔥 nuevo */
+}
+
+.container {
+  max-width: 65ch; /* 🔥 clave (60–70 caracteres) */
+  margin: auto;
+}
+
+.lista {
+  text-align: left;
+  margin: 15px 0;
+  padding-left: 20px;
+  color: #cbd5f5;
+  line-height: 1.7;
+}
+
+.box {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+h2, #titulo {
+  text-align: center;
+}
+
+.btn {
+  text-align: center;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.cancel-btn {
+  position: fixed; /* 🔥 lo deja fijo en pantalla */
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.cancel-btn:hover {
+  background: #dc2626;
+}
+
+
+/* 📘 INTRO */
+.intro h2 {
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cbd5f5;
+}
+
+/* Botón general */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background: #2b3bf1;
+}
+
+/* Barra progreso */
+.progress {
+  height: 8px;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #38bdf8;
+  width: 0%;
+}
+
+
+/* 🔥 BOTÓN FALSO (sin borde azul) */
+.fake-btn {
+  display: inline-block;
+  background: #e8431a;
+  color: rgb(10, 10, 10);
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 🔴 ELIMINA EL RECUADRO AZUL */
+.fake-btn:focus,
+.fake-btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Opciones */
+#opciones .btn {
+  margin-top: 10px;
+}
+
+.feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+}
+
+.correcto {
+  background: #14532d;
+}
+
+.incorrecto {
+  background: #7f1d1d;
+}
+
+.qr-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  max-width: 350px;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.qr-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000000; /* puedes cambiar este color */
+}
+
+.qr-box {
+  width: 150px;
+  height: 150px;
+  margin: 10px auto;
+  background: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 5px,
+    #fff 5px,
+    #fff 10px
+  );
+  border: 5px solid #040404;
+}
+
+.qr-desc {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #000000
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app"></div>
+
+<script type="module">
+
+
+window.cancelarTest = function() {
+  const confirmar = confirm("¿Seguro que quieres salir del test?");
+  
+  if (confirmar) {
+    window.location.href = "../simulaciones.html"; // 🔥 cambia por tu ruta real
+  }
+}
+
+
+function mezclarArray(array) {
+  let copia = [...array];
+
+  for (let i = copia.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+
+  return copia;
+}
+
+// ================== INTRO ==================
+function mostrarIntro() {
+preguntas = mezclarArray(preguntas);
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="box intro">
+     <h2>¿Qué es el QR Phishing?</h2>
+
+<p>
+El <b>QR Phishing</b> es un tipo de ataque de ingeniería social en el que un atacante
+utiliza códigos QR falsos para engañarte y hacer que accedas a sitios web maliciosos.
+</p>
+
+<p>
+Generalmente se presenta como códigos QR colocados en lugares públicos,
+correos electrónicos, mensajes o carteles que aparentan ser legítimos,
+como promociones, pagos, menús digitales o accesos a servicios.
+</p>
+
+<p>
+<b>¿Cuál es la finalidad?</b><br>
+El objetivo principal es redirigirte a una página falsa donde puedan robar
+tu información personal o instalar software malicioso en tu dispositivo.
+</p>
+
+<p>
+<b>¿Para qué usan tus datos?</b><br>
+Los atacantes pueden utilizar la información obtenida para:
+</p>
+
+<ul class="lista">
+<li>Robar credenciales de acceso (correo, redes sociales, banca)</li>
+<li>Realizar fraudes o pagos no autorizados</li>
+<li>Instalar malware en tu dispositivo</li>
+<li>Suplantar tu identidad</li>
+<li>Redirigirte a otras páginas maliciosas</li>
+</ul>
+
+<p>
+<b>Recuerda:</b> Antes de escanear un código QR, verifica su origen y evita hacerlo
+si proviene de fuentes desconocidas o sospechosas.
+</p>
+
+<p>
+En esta simulación aprenderás a identificar códigos QR sospechosos
+y evitar acceder a enlaces peligrosos.
+</p>
+      <button class="btn" onclick="iniciarSimulacion()">
+        Comenzar simulación
+      </button>
+    </div>
+  `;
+}
+
+// ================== QUIZ ==================
+
+
+let preguntas = [
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+
+<div class="qr-card">
+  <div class="qr-header">🚫 WiFi Gratis</div>
+
+  <div class="qr-box"></div>
+
+  <div class="qr-desc">
+  Escanea este código para conectarte a la red WiFi gratuita del campus.<br><br>
+  Disponible por tiempo limitado.
+  </div>
+</div>
+
+<p><b>¿Este código QR es confiable?</b></p>
+`,
+opciones:[
+{ texto:"Sí, es útil", correcta:false },
+{ texto:"No, puede ser un enlace malicioso", correcta:true }
+],
+explicacion:
+"Los atacantes colocan códigos QR falsos en lugares públicos para redirigirte a páginas peligrosas."
+},
+
+
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+
+<div class="qr-card">
+  <div class="qr-header">💸 Pago rápido</div>
+
+  <div class="qr-box"></div>
+
+  <div class="qr-desc">
+  Escanea para pagar tu consumo.<br><br>
+  Solo pagos digitales.
+  </div>
+</div>
+
+<p><b>¿Este código QR es confiable?</b></p>
+`,
+opciones:[
+{ texto:"Sí, es normal pagar así", correcta:false },
+{ texto:"No, podría redirigir a una cuenta falsa", correcta:true }
+],
+explicacion:
+"Los códigos QR pueden redirigir a cuentas de pago fraudulentas sin que lo notes."
+},
+
+
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+
+<div class="qr-card">
+  <div class="qr-header">📧 Verificación de cuenta</div>
+
+  <div class="qr-box"></div>
+
+  <div class="qr-desc">
+  Escanea este código para verificar tu cuenta y evitar suspensión.
+  </div>
+</div>
+
+<p><b>¿Este código QR es confiable?</b></p>
+`,
+opciones:[
+{ texto:"Sí, es verificación", correcta:false },
+{ texto:"No, es una táctica de phishing", correcta:true }
+],
+explicacion:
+"Los atacantes usan QR para evitar filtros de seguridad y ocultar enlaces maliciosos."
+},
+
+
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+
+<div class="qr-card">
+  <div class="qr-header">🍽️ Menú digital oficial</div>
+
+  <div class="qr-box"></div>
+
+  <div class="qr-desc">
+  Escanea para ver el menú del restaurante.<br><br>
+  También puedes acceder escribiendo manualmente:
+  www.restaurante-ejemplo.com
+  </div>
+</div>
+
+<p><b>¿Este código QR es confiable?</b></p>
+`,
+opciones:[
+{ texto:"Sí, ofrece alternativa segura", correcta:true },
+{ texto:"No, todos los QR son peligrosos", correcta:false }
+],
+explicacion:
+"Es confiable porque ofrece una alternativa verificable (URL visible)."
+},
+
+
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+
+<div class="qr-card">
+  <div class="qr-header">🎁 Premio ganado</div>
+
+  <div class="qr-box"></div>
+
+  <div class="qr-desc">
+  ¡Felicidades! Ganaste un premio exclusivo.<br><br>
+  Escanea para reclamarlo ahora.
+  </div>
+</div>
+
+<p><b>¿Este código QR es confiable?</b></p>
+`,
+opciones:[
+{ texto:"Sí, aprovechar el premio", correcta:false },
+{ texto:"No, usa engaños emocionales", correcta:true }
+],
+explicacion:
+"Los atacantes usan premios falsos para que actúes sin pensar."
+}
+
+
+];
+
+
+// VARIABLES
+let actual = 0;
+let puntos = 0;
+
+// INICIAR QUIZ
+window.iniciarSimulacion = function () {
+  document.getElementById("app").innerHTML = `
+    <h2 id="titulo"></h2>
+    <div class="progress">
+      <div class="progress-bar" id="barra"></div>
+    </div>
+    <div class="box" id="contenido"></div>
+    <div id="opciones"></div>
+    <p id="feedback"></p>
+  `;
+  mostrarPregunta();
+};
+
+// MOSTRAR PREGUNTA
+function mostrarPregunta() {
+  let p = preguntas[actual];
+
+  document.getElementById("titulo").innerText =
+    "Simulación (" + (actual + 1) + " de " + preguntas.length + ")";
+
+  document.getElementById("contenido").innerHTML = p.contenido;
+
+  let opcionesDiv = document.getElementById("opciones");
+  opcionesDiv.innerHTML = "";
+
+  p.opciones.forEach(op => {
+    let btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = op.texto;
+    btn.onclick = () => responder(op.correcta, p.explicacion);
+    opcionesDiv.appendChild(btn);
+  });
+
+  document.getElementById("barra").style.width =
+    ((actual) / preguntas.length) * 100 + "%";
+}
+
+
+
+// RESPONDER
+function responder(correcta, explicacion) {
+  let feedback = document.getElementById("feedback");
+
+  if (correcta) {
+    puntos++;
+    feedback.innerHTML = `
+      <div class="feedback correcto">
+        ✅ Correcto<br>${explicacion}
+      </div>`;
+  } else {
+    feedback.innerHTML = `
+      <div class="feedback incorrecto">
+        ❌ Incorrecto<br>${explicacion}
+      </div>`;
+  }
+
+  // 🔒 Desactivar botones
+  let botones = document.querySelectorAll("#opciones .btn");
+  botones.forEach(b => b.disabled = true);
+
+  // 👉 Botón siguiente
+  let siguienteBtn = document.createElement("button");
+  siguienteBtn.className = "btn";
+  siguienteBtn.innerText = "Siguiente";
+
+  siguienteBtn.onclick = () => {
+    actual++;
+
+    if (actual < preguntas.length) {
+      mostrarPregunta();
+      document.getElementById("feedback").innerHTML = "";
+    } else {
+      terminar();
+    }
+  };
+
+  document.getElementById("feedback").appendChild(siguienteBtn);
+}
+
+// FINAL
+async function terminar() {
+
+  let calificacion = Math.round(
+    (puntos / preguntas.length) * 100
+  );
+
+
+  while (!window.authCargada) {
+    await new Promise(resolve => setTimeout(resolve,100));
+  }
+
+
+  if (!window.usuarioActual) {
+    alert("Debes iniciar sesión");
+    return;
+  }
+
+
+  try {
+
+    await window.setDoc(
+
+      window.doc(
+        window.db,
+        "usuarios",
+        window.usuarioActual.uid,
+        "resultados",
+        "QRPhishing"
+      ),
+
+      {
+
+        nombre: window.usuarioActual.displayName ||
+                window.usuarioActual.email.split("@")[0],
+        email: window.usuarioActual.email,
+        tipo: "QRPhishing",
+        estado: "Completada",
+        puntos: puntos,
+        total: preguntas.length,
+        calificacion: calificacion,
+        fecha: new Date()
+      }
+    );
+
+
+  } catch (e) {
+    console.error(
+      "Error guardando resultado:",
+      e
+    );
+
+  }
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="box">
+      <h2>Resultado final</h2>
+
+      <p>
+        Puntaje:
+        ${puntos} / ${preguntas.length}
+      </p>
+
+      <p>
+        Calificación:
+        ${calificacion}%
+      </p>
+
+      <p>
+        Estado:
+        Completado
+      </p>
+
+      <button 
+      class="btn" 
+      onclick="location.reload()">
+        Reintentar
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='/dashboard.html'">
+        ⌂ Ir al inicio
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='../simulaciones.html'">
+        ⎔ Ver simulaciones
+      </button>
+
+
+    </div>
+
+  `;
+}
+
+// INICIAR
+mostrarIntro();
+
+</script>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+    authDomain: "cybersecurity-1710f.firebaseapp.com",
+    projectId: "cybersecurity-1710f",
+    storageBucket: "cybersecurity-1710f.firebasestorage.app",
+    messagingSenderId: "179436600475",
+    appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🌍 HACER GLOBAL
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+window.usuarioActual = null;
+window.authCargada = false;
+
+// 👤 DETECTAR USUARIO
+onAuthStateChanged(auth, (user) => {
+
+  window.usuarioActual = user;
+  window.authCargada = true;
+
+});
+</script>
+
+</body>
+</html>
