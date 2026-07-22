@@ -10,11 +10,20 @@ body {
   color: #e5e7eb;
   font-family: Arial, Helvetica, sans-serif;
   padding: 20px;
+   line-height: 1.5; /* 🔥 nuevo */
 }
 
 .container {
-  max-width: 700px;
+  max-width: 65ch; /* 🔥 clave (60–70 caracteres) */
   margin: auto;
+}
+
+.lista {
+  text-align: left;
+  margin: 15px 0;
+  padding-left: 20px;
+  color: #cbd5f5;
+  line-height: 1.7;
 }
 
 .box {
@@ -22,8 +31,38 @@ body {
   padding: 25px;
   border-radius: 12px;
   margin: 20px 0;
+}
+
+h2, #titulo {
   text-align: center;
 }
+
+.btn {
+  text-align: center;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.cancel-btn {
+  position: fixed; /* 🔥 lo deja fijo en pantalla */
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.cancel-btn:hover {
+  background: #dc2626;
+}
+
 
 /* 📘 INTRO */
 .intro h2 {
@@ -51,7 +90,7 @@ body {
 }
 
 .btn:hover {
-  background: #1d4ed8;
+  background: #2b3bf1;
 }
 
 /* Barra progreso */
@@ -143,9 +182,33 @@ body {
 
 <script type="module">
 
+
+window.cancelarTest = function() {
+  const confirmar = confirm("¿Seguro que quieres salir del test?");
+  
+  if (confirmar) {
+    window.location.href = "../simulaciones.html"; // 🔥 cambia por tu ruta real
+  }
+}
+
+
+function mezclarArray(array) {
+  let copia = [...array];
+
+  for (let i = copia.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+
+  return copia;
+}
+
 // ================== INTRO ==================
 function mostrarIntro() {
+preguntas = mezclarArray(preguntas);
+
   document.getElementById("app").innerHTML = `
+
     <div class="box intro">
       <h2>¿Qué es el Phishing?</h2>
 
@@ -171,13 +234,13 @@ function mostrarIntro() {
       Los atacantes pueden utilizar la información robada para:
       </p>
 
-      <p style="text-align:left;">
-      • Robar dinero de cuentas bancarias<br>
-      • Hacer compras en línea sin tu autorización<br>
-      • Suplantar tu identidad (robo de identidad)<br>
-      • Acceder a tus redes sociales o correo<br>
-      • Vender tus datos en el mercado negro<br>
-      </p>
+   <ul class="lista">
+  <li>Robar dinero de cuentas bancarias</li>
+  <li>Hacer compras en línea sin tu autorización</li>
+  <li>Suplantar tu identidad (robo de identidad)</li>
+  <li>Acceder a tus redes sociales o correo</li>
+  <li>Vender tus datos en el mercado negro</li>
+</ul>
 
       <p>
       En esta simulación aprenderás a identificar correos falsos
@@ -192,10 +255,13 @@ function mostrarIntro() {
 }
 
 // ================== QUIZ ==================
+
+
 let preguntas = [
 
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="email">
 <div class="email-header">
 <strong>De:</strong> UAM Unidad Cuajimalpa &lt;UAMActuBien@gmail.com&gt;<br>
@@ -229,6 +295,7 @@ explicacion: "Usa urgencia y dirección del remitente falso"
 
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="email">
 <div class="email-header">
 <strong>De:</strong> soporte@netflix-soporte.xyz<br>
@@ -245,14 +312,15 @@ Tu cuenta será suspendida si no actualizas tu información.<br><br>
 <p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Sí, es legítimo", correcta: true },
-{ texto: "No, es phishing", correcta: false }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es phishing", correcta: true }
 ],
 explicacion: "El dominio no es oficial de Netflix."
 },
 
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="email">
 <div class="email-header">
 <strong>De:</strong> paypal@alerta-seguridad.xyz<br>
@@ -269,15 +337,15 @@ Si no reconoce esta actividad, verifique su cuenta inmediatamente.<br><br>
 <p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Sí, es legítimo", correcta: true },
-{ texto: "No, es phishing", correcta: false }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es phishing", correcta: true }
 ],
 explicacion: "El enlace puede redirigir a una página falsa."
 },
 
 {
 contenido: `
-
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="email">
 <div class="email-header">
 <strong>De:</strong> no-reply@amazon.com<br>
@@ -302,8 +370,8 @@ Gracias por confiar en nuestros servicios.<br><br>
 <p><b>¿Este correo es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Sí, es legítimo", correcta: false },
-{ texto: "No, es phishing", correcta: true }
+{ texto: "Sí, es legítimo", correcta: true},
+{ texto: "No, es phishing", correcta: false }
 ],
 explicacion: "Aunque genera urgencia, no solicita datos sensibles directamente y recomienda usar canales oficiales."
 },
@@ -311,7 +379,7 @@ explicacion: "Aunque genera urgencia, no solicita datos sensibles directamente y
 
 {
 contenido: `
-
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="email">
 <div class="email-header">
 <strong>De:</strong> soporte@netfIix-secure.com<br>
@@ -324,7 +392,7 @@ Para evitar la suspensión definitiva del servicio, debes verificar tu informaci
 
 Por favor accede al siguiente enlace para actualizar tus datos:<br><br>
 
-<a href="#" class="fake-btn">http://www.netFlix-verificacion.com</a><br><br>
+<a href="#" class="fake-btn">http://www.nettlix-verificacion.com</a><br><br>
 
 Si no completas este proceso en las próximas 24 horas, tu cuenta será cancelada.<br><br>
 
@@ -338,7 +406,7 @@ opciones: [
 { texto: "Sí, es legítimo", correcta: false },
 { texto: "No, es phishing", correcta: true }
 ],
-explicacion: "El dominio está alterado (netfIix con 'F' mayúscula en lugar de 'f') y usa urgencia junto con un enlace sospechoso."
+explicacion: "El dominio está alterado (nettIix con doble 't') y usa urgencia junto con un enlace sospechoso."
 }
 
 
@@ -431,46 +499,101 @@ function responder(correcta, explicacion) {
 
 // FINAL
 async function terminar() {
-  let nivel = "";
 
-  if (puntos === 5) nivel = "Experto 🔥";
-  else if (puntos >= 3) nivel = "Intermedio ⚠️";
-  else nivel = "Básico 🚨";
+  let calificacion = Math.round(
+    (puntos / preguntas.length) * 100
+  );
 
-  // 🔥 GUARDAR EN FIRESTORE
+
+  while (!window.authCargada) {
+    await new Promise(resolve => setTimeout(resolve,100));
+  }
+
+
+  if (!window.usuarioActual) {
+    alert("Debes iniciar sesión");
+    return;
+  }
+
+
   try {
-   await window.setDoc(
-  window.doc(window.db, "resultados", Date.now().toString()),
-  {
-    puntos: puntos,
-    total: preguntas.length,
-    nivel: nivel,
-    fecha: new Date().toISOString()
-  }
-);
 
-    console.log("🔥 Datos guardados en Firestore");
+    await window.setDoc(
+
+      window.doc(
+        window.db,
+        "usuarios",
+        window.usuarioActual.uid,
+        "resultados",
+        "phishing"
+      ),
+
+      {
+
+        nombre: window.usuarioActual.displayName ||
+                window.usuarioActual.email.split("@")[0],
+        email: window.usuarioActual.email,
+        tipo: "Phishing",
+        estado: "Completada",
+        puntos: puntos,
+        total: preguntas.length,
+        calificacion: calificacion,
+        fecha: new Date()
+      }
+    );
+
+
   } catch (e) {
-    console.error("❌ Error guardando:", e);
+    console.error(
+      "Error guardando resultado:",
+      e
+    );
+
   }
 
-  // UI
   document.getElementById("app").innerHTML = `
+
     <div class="box">
       <h2>Resultado final</h2>
-      <p>Puntaje: ${puntos} / ${preguntas.length}</p>
-      <p>Nivel: ${nivel}</p>
 
-      <button class="btn" onclick="location.reload()">Reintentar</button>
-      
-      <button class="btn" onclick="window.location.href='/dashboard.html'" style="background:#475569;">
+      <p>
+        Puntaje:
+        ${puntos} / ${preguntas.length}
+      </p>
+
+      <p>
+        Calificación:
+        ${calificacion}%
+      </p>
+
+      <p>
+        Estado:
+        Completado
+      </p>
+
+      <button 
+      class="btn" 
+      onclick="location.reload()">
+        Reintentar
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='/dashboard.html'">
         ⌂ Ir al inicio
       </button>
 
-      <button class="btn" onclick="window.location.href='../simulaciones.html'" style="background:#334155;">
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='../simulaciones.html'">
         ⎔ Ver simulaciones
       </button>
+
+
     </div>
+
   `;
 }
 
@@ -479,9 +602,12 @@ mostrarIntro();
 
 </script>
 
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
   import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
 
   const firebaseConfig = {
     apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
@@ -493,12 +619,23 @@ mostrarIntro();
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-  // 🔥 HACER GLOBAL
-  window.db = db;
-  window.setDoc = setDoc;
-  window.doc = doc;
+// 🌍 HACER GLOBAL
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+window.usuarioActual = null;
+window.authCargada = false;
+
+// 👤 DETECTAR USUARIO
+onAuthStateChanged(auth, (user) => {
+
+  window.usuarioActual = user;
+  window.authCargada = true;
+
+});
 </script>
 
 </body>
