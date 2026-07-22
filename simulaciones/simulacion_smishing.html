@@ -2,80 +2,167 @@
 <html lang="es">
 <head> <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<title>Simulación Smishing</title>
-
+<title>Simulación de Smishing</title>
 <style>
+  
 body {
-  font-family: Arial, sans-serif;
   background: #0f172a;
-  color: white;
-  text-align: center;
+  color: #e5e7eb;
+  font-family: Arial, Helvetica, sans-serif;
   padding: 20px;
+   line-height: 1.5; /* 🔥 nuevo */
+}
+
+.container {
+  max-width: 65ch; /* 🔥 clave (60–70 caracteres) */
+  margin: auto;
+}
+
+.lista {
+  text-align: left;
+  margin: 15px 0;
+  padding-left: 20px;
+  color: #cbd5f5;
+  line-height: 1.7;
 }
 
 .box {
   background: #1e293b;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 400px;
-  margin: auto;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
 }
 
-/* 🔥 BOTONES */
+h2, #titulo {
+  text-align: center;
+}
+
 .btn {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.cancel-btn {
+  position: fixed; /* 🔥 lo deja fijo en pantalla */
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
   border: none;
-  border-radius: 6px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.cancel-btn:hover {
+  background: #dc2626;
+}
+
+
+/* 📘 INTRO */
+.intro h2 {
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cbd5f5;
+}
+
+/* Botón general */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
   background: #2563eb;
   color: white;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .btn:hover {
-  opacity: 0.8;
+  background: #2b3bf1;
 }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* 📱 SMS */
-.sms {
-  background: #e5e7eb;
-  color: #111827;
-  padding: 12px;
-  border-radius: 12px;
-  max-width: 320px;
-  margin: auto;
-  text-align: left;
-  font-size: 14px;
-}
-
-/* 🔥 PROGRESS BAR */
+/* Barra progreso */
 .progress {
-  background: #334155;
+  height: 8px;
+  background: #1e293b;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 15px;
-  height: 10px;
 }
 
 .progress-bar {
-  height: 10px;
-  background: #22c55e;
+  height: 100%;
+  background: #38bdf8;
   width: 0%;
-  transition: width 0.3s;
 }
 
-/* 🧠 FEEDBACK */
+/* Gmail estilo */
+.email {
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 14px;
+  color: #202124;
+  text-align: left;
+}
+
+.email-header {
+  border-bottom: 1px solid #dadce0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+/* 🔴 CORREGIDO: evita estilos de enlace */
+.email a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 🔥 BOTÓN FALSO (sin borde azul) */
+.fake-btn {
+  display: inline-block;
+  background: #e8431a;
+  color: rgb(10, 10, 10);
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 🔴 ELIMINA EL RECUADRO AZUL */
+.fake-btn:focus,
+.fake-btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Opciones */
+#opciones .btn {
+  margin-top: 10px;
+}
+
 .feedback {
   margin-top: 15px;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
 }
 
 .correcto {
@@ -85,302 +172,443 @@ body {
 .incorrecto {
   background: #7f1d1d;
 }
+
+.sms {
+  background: #ffffff; /* 🔥 fondo blanco */
+  color: #000; /* texto negro */
+  padding: 12px 16px;
+  border-radius: 18px;
+  margin: 15px auto;
+  max-width: 300px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.pregunta {
+  text-align: center;
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="app"></div>
+<div class="container" id="app"></div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
-  authDomain: "cybersecurity-1710f.firebaseapp.com",
-  projectId: "cybersecurity-1710f",
-  storageBucket: "cybersecurity-1710f.firebasestorage.app",
-  messagingSenderId: "179436600475",
-  appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+window.cancelarTest = function() {
+  const confirmar = confirm("¿Seguro que quieres salir del test?");
+  
+  if (confirmar) {
+    window.location.href = "../simulaciones.html"; // 🔥 cambia por tu ruta real
+  }
+}
 
 
-// INTRO
+function mezclarArray(array) {
+  let copia = [...array];
+
+  for (let i = copia.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+
+  return copia;
+}
+
+// ================== INTRO ==================
 function mostrarIntro() {
+preguntas = mezclarArray(preguntas);
+
   document.getElementById("app").innerHTML = `
-    <div class="box">
-     <h2>¿Qué es el Smishing?</h2>
 
-<p>
-El <b>smishing</b> es un tipo de ataque de <b>ingeniería social</b> que se realiza
-a través de <b>mensajes SMS</b> o aplicaciones de mensajería.
-</p>
+    <div class="box intro">
+       <h2>¿Qué es el Smishing?</h2>
 
-<p>
-La palabra proviene de la combinación de <b>"SMS"</b> y <b>"phishing"</b>,
-ya que funciona de manera similar: el atacante intenta engañarte
-para que reveles información personal o hagas clic en enlaces maliciosos.
-</p>
+      <p>
+      El <b>smishing</b> es un tipo de ataque de <b>ingeniería social</b> que se realiza
+      a través de <b>mensajes SMS</b> o aplicaciones de mensajería.
+      </p>
 
-<p>
-Generalmente, estos mensajes parecen provenir de empresas reales como
-bancos, paqueterías (DHL, FedEx), plataformas (Netflix, Amazon) o incluso
-instituciones gubernamentales.
-</p>
+      <p>
+      La palabra proviene de la combinación de <b>"SMS"</b> y <b>"phishing"</b>,
+      ya que funciona de manera similar: el atacante intenta engañarte
+      para que reveles información personal o hagas clic en enlaces maliciosos.
+      </p>
 
-<p>
-<b>¿Cuál es la finalidad?</b><br>
-El objetivo principal es que hagas clic en un enlace falso o proporciones
-información sensible como contraseñas, datos bancarios o códigos de verificación.
-</p>
+      <p>
+      Generalmente, estos mensajes parecen provenir de empresas reales como
+      bancos, paqueterías (DHL, FedEx), plataformas (Netflix, Amazon) o incluso
+      instituciones gubernamentales.
+      </p>
 
-<p>
-<b>¿Para qué usan tus datos?</b><br>
-Los atacantes pueden utilizar la información robada para:
-</p>
+      <p>
+      <b>¿Cuál es la finalidad?</b><br>
+      El objetivo principal es que hagas clic en un enlace falso o proporciones
+      información sensible como contraseñas, datos bancarios o códigos de verificación.
+      </p>
 
-<p style="text-align:left;">
-• Vaciar cuentas bancarias<br>
-• Realizar compras sin tu autorización<br>
-• Robar tu identidad (suplantación)<br>
-• Acceder a tus redes sociales o correo<br>
-• Estafar a tus contactos haciéndose pasar por ti<br>
-• Vender tus datos en internet (dark web)<br>
-</p>
+      <p>
+      <b>¿Para qué usan tus datos?</b><br>
+      Los atacantes pueden utilizar la información robada para:
+      </p>
 
-<p>
-<b>Señales comunes de Smishing:</b>
-</p>
+     <ul class="lista">
+      • Vaciar cuentas bancarias<br>
+      • Realizar compras sin tu autorización<br>
+      • Robar tu identidad (suplantación)<br>
+      • Acceder a tus redes sociales o correo<br>
+      • Estafar a tus contactos haciéndose pasar por ti<br>
+      • Vender tus datos en internet (dark web)<br>
+      </ul>
 
-<p style="text-align:left;">
-• Mensajes con urgencia ("tu cuenta será bloqueada")<br>
-• Enlaces sospechosos o acortados<br>
-• Ofertas demasiado buenas para ser verdad<br>
-• Mensajes de números desconocidos<br>
-• Errores ortográficos o dominios raros (.xyz, .top, etc.)<br>
-</p>
+      <p>
+      <b>Señales comunes de Smishing:</b>
+      </p>
 
-<p>
-En esta simulación aprenderás a identificar mensajes SMS falsos
-y evitar caer en este tipo de ataques.
-</p>
+      <ul class="lista">
+        • Mensajes con urgencia ("tu cuenta será bloqueada")<br>
+        • Enlaces sospechosos o acortados<br>
+        • Ofertas demasiado buenas para ser verdad<br>
+        • Mensajes de números desconocidos<br>
+        • Errores ortográficos o dominios raros (.xyz, .top, etc.)<br>
+      </ul>
+      </p>
 
-<button class="btn" onclick="iniciar()">
-  Comenzar simulación
-</button>
+      <p>
+      En esta simulación aprenderás a identificar mensajes SMS falsos
+      y evitar caer en este tipo de ataques.
+      </p>
+      <button class="btn" onclick="iniciarSimulacion()">
+        Comenzar simulación
+      </button>
+    </div>
   `;
 }
 
+// ================== QUIZ ==================
 
-// VARIABLES
-let indice = 0;
-let puntos = 0;
 
-// PREGUNTAS
-const preguntas = [
+let preguntas = [
+
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="sms">
-BBVA: Detectamos actividad sospechosa.
-Verifique su cuenta aquí:
-http://bbva-seguridad.xyz
+Juan Lopez envio $3,365MXN a la cuenta 
+terminada en 5536272829 via transferencia.
+Revisa tu app y retira el saldo disponible:
+http://bit.ly/4pGsntf?3745
 </div>
-<p><b>¿Qué indica este mensaje?</b></p>
+<p class="pregunta"><b>¿Este mensaje es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Mensaje legítimo", correcta: false },
-{ texto: "Smishing", correcta: true }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es smishing", correcta: true }
 ],
-explicacion: "El enlace usa dominio falso (.xyz), típico de fraude."
+explicacion: "El mensaje intenta generar urgencia y curiosidad al mencionar una transferencia de dinero que el usuario no solicitó. Además, utiliza un enlace acortado (bit.ly), lo cual oculta el destino real y es una técnica común en ataques de smishing para redirigir a sitios fraudulentos que roban información."
 },
+
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="sms">
-DHL: Su paquete está retenido.
-Pague el envío aquí:
-http://dhl-entrega.xyz
+Debido a la direccion incorrecta que ingreso, 
+el paquete se retrasara y 
+no se enviara hasta que se 
+corrija: http://dhl-entrega.xyz
 </div>
-<p><b>¿Qué hace sospechoso este SMS?</b></p>
+<p class="pregunta"><b>¿Este mensaje es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Enlace falso", correcta: true },
-{ texto: "Mensaje normal", correcta: false }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es smishing", correcta: true }
 ],
-explicacion: "Las empresas reales no usan dominios extraños."
+explicacion: "Genera urgencia con un problema de entrega y usa un enlace con dominio sospechoso (.xyz), típico de fraude."
 },
+
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="sms">
-Netflix: Su cuenta será suspendida.
-Actualice su información:
-http://netflix-verificacion.xyz
+Netflix: Detectamos un problema con tu cuenta.
+Evita la suspensión revisando tu información aquí:
+https://www.netflix.com/account
 </div>
-<p><b>¿Cuál es la señal de smishing?</b></p>
+<p class="pregunta"><b>¿Este mensaje es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Urgencia + link falso", correcta: true },
-{ texto: "Mensaje oficial", correcta: false }
+{ texto: "Sí, es legítimo", correcta: true },
+{ texto: "No, es smishing", correcta: false }
 ],
-explicacion: "La urgencia es una técnica de manipulación."
+explicacion: "Aunque genera urgencia y contiene un enlace, este dirige al dominio oficial de Netflix y no pide datos directamente por el mensaje."
 },
+
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="sms">
-Amazon: Ganaste un premio.
-Reclámalo aquí:
-http://amazon-regalo.xyz
+FedEx: Tu paquete está en camino.
+Consulta el estado de tu envío aquí:
+https://www.fedex.com/apps/fedextrack/?tracknumbers=784512369
 </div>
-<p><b>¿Qué tipo de ataque es?</b></p>
+<p class="pregunta"><b>¿Este mensaje es confiable?</b></p>
 `,
 opciones: [
-{ texto: "Smishing con recompensa", correcta: true },
-{ texto: "Promoción real", correcta: false }
+{ texto: "Sí, es legítimo", correcta: true },
+{ texto: "No, es smishing", correcta: false }
 ],
-explicacion: "Las ofertas irreales suelen ser fraude."
+explicacion: "Aunque incluye un enlace, usa el dominio oficial de la empresa y no solicita datos sensibles."
 },
+
 {
 contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
 <div class="sms">
-BBVA: Su cuenta será bloqueada.
-Confirme aquí:
-http://BBVA-alerta.xyz
+BBVA: Detectamos actividad inusual en su cuenta.
+Por seguridad, verifique su identidad aquí:
+https://bbva-seguridad-cliente.com/verificar
 </div>
-<p><b>¿Qué debes hacer?</b></p>
+<p class="pregunta"><b>¿Este mensaje es confiable?</b></p>
 `,
 opciones: [
-{ texto: "No hacer clic y reportar", correcta: true },
-{ texto: "Abrir el enlace", correcta: false }
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es smishing", correcta: true }
 ],
-explicacion: "Nunca abras enlaces sospechosos."
+explicacion: "El mensaje genera urgencia y dirige a un enlace que imita al banco, pero no es oficial."
 }
+
 ];
 
 
+// VARIABLES
+let actual = 0;
+let puntos = 0;
 
-// INICIAR
-window.iniciar = function() {
-  indice = 0;
-  puntos = 0;
+// INICIAR QUIZ
+window.iniciarSimulacion = function () {
+  document.getElementById("app").innerHTML = `
+    <h2 id="titulo"></h2>
+    <div class="progress">
+      <div class="progress-bar" id="barra"></div>
+    </div>
+    <div class="box" id="contenido"></div>
+    <div id="opciones"></div>
+    <p id="feedback"></p>
+  `;
   mostrarPregunta();
-}
+};
 
 // MOSTRAR PREGUNTA
 function mostrarPregunta() {
-  const p = preguntas[indice];
-  let progreso = (indice / preguntas.length) * 100;
+  let p = preguntas[actual];
 
-  let html = `
-  <div class="box">
+  document.getElementById("titulo").innerText =
+    "Simulación (" + (actual + 1) + " de " + preguntas.length + ")";
 
-    <div class="progress">
-      <div class="progress-bar" style="width:${progreso}%"></div>
-    </div>
+  document.getElementById("contenido").innerHTML = p.contenido;
 
-    <p>Pregunta ${indice + 1} de ${preguntas.length}</p>
+  let opcionesDiv = document.getElementById("opciones");
+  opcionesDiv.innerHTML = "";
 
-    ${p.contenido}
-  `;
-
-  p.opciones.forEach((op, i) => {
-    html += `<button class="btn" onclick="responder(${i})">${op.texto}</button>`;
+  p.opciones.forEach(op => {
+    let btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = op.texto;
+    btn.onclick = () => responder(op.correcta, p.explicacion);
+    opcionesDiv.appendChild(btn);
   });
 
-  html += `<div id="feedback"></div>`;
-  html += `</div>`;
-
-  document.getElementById("app").innerHTML = html;
+  document.getElementById("barra").style.width =
+    ((actual) / preguntas.length) * 100 + "%";
 }
 
+
+
 // RESPONDER
-window.responder = function(i) {
-  const p = preguntas[indice];
-  const botones = document.querySelectorAll(".btn");
-
-  botones.forEach(b => b.disabled = true);
-
+function responder(correcta, explicacion) {
   let feedback = document.getElementById("feedback");
 
-  if (p.opciones[i].correcta) {
+  if (correcta) {
     puntos++;
     feedback.innerHTML = `
       <div class="feedback correcto">
-        ✅ Correcto<br>${p.explicacion}
+        ✅ Correcto<br>${explicacion}
       </div>`;
   } else {
     feedback.innerHTML = `
       <div class="feedback incorrecto">
-        ❌ Incorrecto<br>${p.explicacion}
+        ❌ Incorrecto<br>${explicacion}
       </div>`;
   }
 
-  setTimeout(() => {
-    indice++;
-    if (indice < preguntas.length) {
+  // 🔒 Desactivar botones
+  let botones = document.querySelectorAll("#opciones .btn");
+  botones.forEach(b => b.disabled = true);
+
+  // 👉 Botón siguiente
+  let siguienteBtn = document.createElement("button");
+  siguienteBtn.className = "btn";
+  siguienteBtn.innerText = "Siguiente";
+
+  siguienteBtn.onclick = () => {
+    actual++;
+
+    if (actual < preguntas.length) {
       mostrarPregunta();
+      document.getElementById("feedback").innerHTML = "";
     } else {
       terminar();
     }
-  }, 2000);
+  };
+
+  document.getElementById("feedback").appendChild(siguienteBtn);
 }
+
 // FINAL
 async function terminar() {
 
-  let nivel = "";
+  let calificacion = Math.round(
+    (puntos / preguntas.length) * 100
+  );
 
-  if (puntos === 5) nivel = "Experto 🔥";
-  else if (puntos >= 3) nivel = "Intermedio ⚠️";
-  else nivel = "Básico 🚨";
 
-  // 🔥 GUARDAR EN FIRESTORE (IGUAL QUE PHISHING)
+  while (!window.authCargada) {
+    await new Promise(resolve => setTimeout(resolve,100));
+  }
+
+
+  if (!window.usuarioActual) {
+    alert("Debes iniciar sesión");
+    return;
+  }
+
+
   try {
+
     await window.setDoc(
-      window.doc(window.db, "resultados", Date.now().toString()),
+
+      window.doc(
+        window.db,
+        "usuarios",
+        window.usuarioActual.uid,
+        "resultados",
+        "smishing"
+      ),
+
       {
+
+        nombre: window.usuarioActual.displayName ||
+                window.usuarioActual.email.split("@")[0],
+        email: window.usuarioActual.email,
+        tipo: "smishing",
+        estado: "Completada",
         puntos: puntos,
         total: preguntas.length,
-        nivel: nivel,
-        fecha: new Date().toISOString()
+        calificacion: calificacion,
+        fecha: new Date()
       }
     );
 
-    console.log("🔥 Datos guardados en Firestore");
+
   } catch (e) {
-    console.error("❌ Error guardando:", e);
+    console.error(
+      "Error guardando resultado:",
+      e
+    );
+
   }
 
-  // UI FINAL (IGUAL QUE PHISHING)
   document.getElementById("app").innerHTML = `
+
     <div class="box">
       <h2>Resultado final</h2>
-      <p>Puntaje: ${puntos} / ${preguntas.length}</p>
-      <p>Nivel: ${nivel}</p>
 
-      <button class="btn" onclick="location.reload()">Reintentar</button>
-      
-      <button class="btn" onclick="window.location.href='/dashboard.html'" style="background:#475569;">
+      <p>
+        Puntaje:
+        ${puntos} / ${preguntas.length}
+      </p>
+
+      <p>
+        Calificación:
+        ${calificacion}%
+      </p>
+
+      <p>
+        Estado:
+        Completado
+      </p>
+
+      <button 
+      class="btn" 
+      onclick="location.reload()">
+        Reintentar
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='/dashboard.html'">
         ⌂ Ir al inicio
       </button>
 
-      <button class="btn" onclick="window.location.href='../simulaciones.html'" style="background:#334155;">
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='../simulaciones.html'">
         ⎔ Ver simulaciones
       </button>
+
+
     </div>
+
   `;
 }
 
+// INICIAR
+mostrarIntro();
 
-// HACER GLOBAL
+</script>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+    authDomain: "cybersecurity-1710f.firebaseapp.com",
+    projectId: "cybersecurity-1710f",
+    storageBucket: "cybersecurity-1710f.firebasestorage.app",
+    messagingSenderId: "179436600475",
+    appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🌍 HACER GLOBAL
 window.db = db;
 window.setDoc = setDoc;
 window.doc = doc;
+window.usuarioActual = null;
+window.authCargada = false;
 
-// INICIAR APP
-mostrarIntro();
+// 👤 DETECTAR USUARIO
+onAuthStateChanged(auth, (user) => {
+
+  window.usuarioActual = user;
+  window.authCargada = true;
+
+});
 </script>
 
 </body>
