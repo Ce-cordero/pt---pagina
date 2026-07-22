@@ -96,6 +96,8 @@
 </head>
 <body>
 
+
+  
 <div class="container">
   <h2>Crear cuenta</h2>
 
@@ -134,8 +136,7 @@
 <!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+  import { getAuth, createUserWithEmailAndPassword, updateProfile }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   const firebaseConfig = {
     apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
     authDomain: "cybersecurity-1710f.firebaseapp.com",
@@ -154,31 +155,41 @@
     register();
   });
 
-  function register() {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
+async function register() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
 
-    if (password.length < 6) {
-      alert('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
-
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-       // alert("Cuenta creada 🎉");
-        window.location.href = "login.html";
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
+  if (password.length < 6) {
+    alert('La contraseña debe tener al menos 6 caracteres');
+    return;
   }
+
+  if (password !== confirmPassword) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+    // 🔥 AQUÍ GUARDAS EL NOMBRE
+    await updateProfile(userCredential.user, {
+  displayName: name
+});
+await userCredential.user.reload();
+
+console.log(
+ "Usuario:",
+ userCredential.user.displayName
+);
+    window.location.href = "login.html";
+
+  } catch (error) {
+    alert("Error: " + error.message);
+  }
+}
 </script>
 
 </body>
