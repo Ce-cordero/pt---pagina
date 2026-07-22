@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Perfil - CyberSim</title>
+  <title>CyberSim</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -45,194 +45,582 @@
       color: #38bdf8;
     }
 
-    .container {
-      padding: 25px;
-      max-width: 1100px;
-      margin: auto;
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      nav a {
+        margin: 5px 10px;
+      }
     }
 
-    .title {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+  .logout-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px; /* ✅ ahora a la derecha */
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #38bdf8;
+  color: #020617;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(56,189,248,0.3);
+  transition: 0.3s;
+}
 
-    .title h2 {
-      font-size: 1.8rem;
-    }
+.logout-btn:hover {
+  background: #e9410e;
+  transform: scale(1.05);
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
+.user-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .card {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 14px;
-      border: 1px solid rgba(56,189,248,0.15);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      transition: 0.3s;
-    }
+.avatar {
+  width: 70px;
+  height: 70px;
+  background: #1e293b;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(56,189,248,0.2);
+}
 
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: #38bdf8;
-      box-shadow: 0 0 15px rgba(56,189,248,0.2);
-    }
+.user-name {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #e2e8f0;
+}
 
-    .card h3 {
-      color: #38bdf8;
-      margin-bottom: 10px;
-    }
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(56,189,248,0.4);
+}
 
-    .stat {
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin: 10px 0;
-    }
+.top-section {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin-top: 40px;
+  margin-left: 30px;
+}
 
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      background: #020617;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
 
-    .progress {
-      height: 100%;
-      background: #38bdf8;
-    }
+.results-title h2 {
+  font-size: 2.2rem;
+  color: #38bdf8;
+  margin-bottom: 8px;
+}
 
-    ul {
-      padding-left: 18px;
-      font-size: 0.9rem;
-    }
 
-    ul li {
-      margin-bottom: 6px;
-    }
+.results-title p {
+  font-size: 1rem;
+  color: #94a3b8;
+}
 
-    .logout {
-      text-align: center;
-      margin-top: 30px;
-    }
+.simulaciones-box {
+  margin-top: 50px;
+  margin-left: 30px;
+  width: 90%;
+  max-width: 900px;
+}
 
-    .logout button {
-      padding: 12px 25px;
-      border-radius: 10px;
-      border: none;
-      background: #ef4444;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+.simulaciones-box h2 {
+  color:#38bdf8;
+  font-size:1.8rem;
+  margin-bottom:20px;
+}
 
-    .logout button:hover {
-      background: #dc2626;
-      transform: scale(1.05);
-    }
+.resultado-card {
+
+  background:#1e293b;
+
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.resultado-info h3 {
+  color:#e2e8f0;
+  font-size:1.2rem;
+  margin-bottom:8px;
+}
+
+.resultado-info p {
+  color:#94a3b8;
+  font-size:.9rem;
+}
+
+.estado {
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:.85rem;
+  font-weight:600;
+}
+
+.detectado {
+  background:#14532d;
+  color:#86efac;
+}
+
+.no-detectado {
+  background:#7f1d1d;
+  color:#fca5a5;
+}
+
+.puntos {
+  font-size:1.3rem;
+  font-weight:bold;
+  color:#38bdf8;
+}
+
+
+/* Adaptación para celular */
+@media(max-width:600px){
+
+  .top-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 80px;
+  margin-top: 40px;
+  margin-left: 30px;
+  width: 100%;
+}
+
+.results-title {
+  flex: 1;
+}
+
+}
 
   </style>
 </head>
+
 <body>
 
 <header>
   <h1>CyberSim</h1>
+
   <nav>
     <a href="dashboard.html">⌂ Inicio</a>
     <a href="simulaciones.html">⎔ Simulaciones</a>
-   <!-- <a href="resultados.html">⌸ Resultados</a> -->
     <a href="perfil.html">⍝ Perfil</a>
   </nav>
 </header>
 
-<div class="container">
+<div class="top-section">
+  <div class="user-box">
+    <div class="avatar" id="avatar">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="#38bdf8">
+        <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+      </svg>
+    </div>
 
-  <div class="title">
-    <h2>Perfil del Usuario</h2>
-    <p>Progreso en simulaciones de phishing</p>
+    <div class="user-name" id="userName">
+      Usuario
+    </div>
   </div>
 
-  <div class="grid">
-
-    <!-- PROGRESO GENERAL -->
-    <div class="card">
-      <h3>📊 Progreso General</h3>
-
-      <p>Puntos totales:</p>
-      <div class="stat" id="puntos">0</div>
-
-      <p>Tasa de éxito:</p>
-      <div class="stat" id="tasa">0%</div>
-
-      <div class="progress-bar">
-        <div class="progress" id="barra" style="width:0%"></div>
-      </div>
-    </div>
-
-    <!-- RESULTADOS -->
-    <div class="card">
-      <h3>📈 Resultados</h3>
-
-      <p>Simulaciones exitosas:</p>
-      <div class="stat" id="exitos">0</div>
-
-      <p>Simulaciones fallidas:</p>
-      <div class="stat" id="fallos">0</div>
-    </div>
-
-    <!-- TIPOS DE SIMULACIONES -->
-    <div class="card">
-      <h3>🎯 Tipos de simulaciones</h3>
-
-      <ul>
-        <li>Phishing por correo</li>
-        <li>Phishing bancario</li>
-        <li>Phishing redes sociales</li>
-        <li>Phishing urgente</li>
-        <li>Phishing con enlaces falsos</li>
-        <li>Phishing con premios falsos</li>
-        <li>Phishing suplantación de identidad</li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- CERRAR SESIÓN -->
-  <div class="logout">
-    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  <div class="results-title">
+    <h2>Resultados</h2>
+    <p>
+      Revisa tu desempeño en las simulaciones realizadas
+    </p>
   </div>
 
 </div>
 
-<script>
-  // SIMULACIÓN DE DATOS (luego lo puedes conectar con localStorage o backend)
-  let exitos = localStorage.getItem("exitos") || 3;
-  let fallos = localStorage.getItem("fallos") || 2;
-  let puntos = localStorage.getItem("puntos") || 30;
+<div class="simulaciones-box">
 
-  exitos = parseInt(exitos);
-  fallos = parseInt(fallos);
-  puntos = parseInt(puntos);
+  <h2>Simulaciones Realizadas</h2>
 
-  let total = exitos + fallos;
-  let tasa = total > 0 ? Math.round((exitos / total) * 100) : 0;
+ <!-- Phishing -->
+ <div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Phishing</h3>
+    <p id="fechaPhishing">
+      Sin realizar
+    </p>
+    <span id="estadoPhishing" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosPhishing">
+    0 pts  
+  </div>
+  
+</div>
 
-  document.getElementById("exitos").innerText = exitos;
-  document.getElementById("fallos").innerText = fallos;
-  document.getElementById("puntos").innerText = puntos;
-  document.getElementById("tasa").innerText = tasa + "%";
-  document.getElementById("barra").style.width = tasa + "%";
 
-  function cerrarSesion() {
-    localStorage.clear();
-    window.location.href = "index.html"; // o login.html
+
+<!-- Smishing -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Smishing</h3>
+    <p id="fechaSmishing">
+      Sin realizar
+    </p>
+    <span id="estadoSmishing" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosSmishing">
+    0 pts
+  </div>
+</div>
+
+<!-- vishing -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Vishing</h3>
+    <p id="fechaVishing">
+      Sin realizar
+    </p>
+    <span id="estadoVishing" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosVishing">
+    0 pts
+  </div>
+</div>
+
+<!-- Pretexting -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Pretexting</h3>
+    <p id="fechaPretexting">
+      Sin realizar
+    </p>
+    <span id="estadoPretexting" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosPretexting">
+    0 pts
+  </div>
+</div>
+
+
+  <!-- Baiting -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Baiting</h3>
+    <p id="fechaBaiting">
+      Sin realizar
+    </p>
+    <span id="estadoBaiting" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosBaiting">
+    0 pts
+  </div>
+</div>
+
+
+<!-- Quid Pro Quo -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Quid Pro Quo</h3>
+    <p id="fechaQuid">
+      Sin realizar
+    </p>
+    <span id="estadoQuid" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosQuid">
+    0 pts
+  </div>
+</div>
+
+
+ <!-- Spear Phishing -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>Spear Phishing</h3>
+    <p id="fechaSpear">
+      Sin realizar
+    </p>
+    <span id="estadoSpear" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosSpear">
+    0 pts
+  </div>
+</div>
+
+
+ <!-- QR Phishing -->
+<div class="resultado-card">
+  <div class="resultado-info">
+    <h3>QR Phishing</h3> 
+    <p id="fechaQR">
+      Sin realizar
+    </p>
+    <span id="estadoQR" class="estado">
+      Pendiente
+    </span>
+  </div>
+  <div class="puntos" id="puntosQR">
+    0 pts
+  </div>
+</div>
+
+
+</div>
+
+
+
+
+<script type="module">
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+import { 
+getAuth, 
+onAuthStateChanged 
+} 
+from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+
+import { 
+getFirestore,
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+  authDomain: "cybersecurity-1710f.firebaseapp.com",
+  projectId: "cybersecurity-1710f",
+  storageBucket: "cybersecurity-1710f.firebasestorage.app",
+  messagingSenderId: "179436600475",
+  appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/*cargarPhishing*/
+async function cargarPhishing(uid){
+  const referencia = doc(
+    db,
+    "usuarios",
+    uid,
+    "resultados",
+    "phishing"
+  );
+
+  const resultado = await getDoc(referencia);
+
+  if(resultado.exists()){
+    const datos = resultado.data();
+    // Fecha
+    let fecha = datos.fecha.toDate();
+    document.getElementById("fechaPhishing").innerText =
+    fecha.toLocaleDateString("es-MX",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    });
+    // Puntos
+    document.getElementById("puntosPhishing").innerText =
+    datos.calificacion + " pts";
+    // Estado
+    document.getElementById("estadoPhishing").innerText =
+    "Completada";
+    document.getElementById("estadoPhishing").className =
+    "estado detectado";
+  }else{
+    // Nunca realizada
+    document.getElementById("fechaPhishing").innerText =
+    "Sin realizar";
+    document.getElementById("puntosPhishing").innerText =
+    "0 pts";
+    document.getElementById("estadoPhishing").innerText =
+    "Pendiente";
   }
+}
+
+/*cargarSmishing*/
+async function cargarSmishing(uid){
+  const referencia = doc(
+    db,
+    "usuarios",
+    uid,
+    "resultados",
+    "smishing"
+  );
+  const resultado = await getDoc(referencia);
+  if(resultado.exists()){
+    const datos = resultado.data();
+    // Fecha
+    let fecha = datos.fecha.toDate();
+    document.getElementById("fechaSmishing").innerText =
+    fecha.toLocaleDateString("es-MX",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    });
+    // Puntos
+    document.getElementById("puntosSmishing").innerText =
+    datos.calificacion + " pts";
+    // Estado
+    document.getElementById("estadoSmishing").innerText =
+    "Completada";
+    document.getElementById("estadoSmishing").className =
+    "estado detectado";
+  }else{
+    document.getElementById("fechaSmishing").innerText =
+    "Sin realizar";
+    document.getElementById("puntosSmishing").innerText =
+    "0 pts";
+    document.getElementById("estadoSmishing").innerText =
+    "Pendiente";
+  }
+}
+
+/*cargarVishing*/
+async function cargarVishing(uid){
+  const referencia = doc(
+    db,
+    "usuarios",
+    uid,
+    "resultados",
+    "vishing"
+  );
+  const resultado = await getDoc(referencia);
+  if(resultado.exists()){
+    const datos = resultado.data();
+    // Fecha
+    let fecha = datos.fecha.toDate();
+    document.getElementById("fechaVishing").innerText =
+    fecha.toLocaleDateString("es-MX",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    });
+    // Puntos
+    document.getElementById("puntosVishing").innerText =
+    datos.calificacion + " pts";
+    // Estado
+    document.getElementById("estadoVishing").innerText =
+    "Completada";
+    document.getElementById("estadoVishing").className =
+    "estado detectado";
+  }else{
+    document.getElementById("fechaVishing").innerText =
+    "Sin realizar";
+    document.getElementById("puntosVishing").innerText =
+    "0 pts";
+    document.getElementById("estadoVishing").innerText =
+    "Pendiente";
+  }
+}
+
+
+/*cargarQrPhishing*/
+async function cargarQrPhishing(uid){
+  const referencia = doc(
+    db,
+    "usuarios",
+    uid,
+    "resultados",
+    "QRPhishing"
+  );
+
+  const resultado = await getDoc(referencia);
+
+  const fechaEl = document.getElementById("fechaQR");
+  const puntosEl = document.getElementById("puntosQR");
+  const estadoEl = document.getElementById("estadoQR");
+
+  if(!fechaEl || !puntosEl || !estadoEl){
+    console.error("Elementos QR no encontrados");
+    return;
+  }
+
+  if(resultado.exists()){
+    const datos = resultado.data();
+
+    let fecha = datos.fecha.toDate();
+    fechaEl.innerText = fecha.toLocaleDateString("es-MX",{
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    });   
+
+    puntosEl.innerText = datos.calificacion + " pts";
+
+    estadoEl.innerText = "Completada";
+    estadoEl.className = "estado detectado";
+
+  }else{
+    fechaEl.innerText = "Sin realizar";
+    puntosEl.innerText = "0 pts";
+    estadoEl.innerText = "Pendiente";
+  }
+}
+
+
+onAuthStateChanged(auth, (user)=>{
+  if(user){
+    let nombre =
+    user.displayName ||
+    user.email.split("@")[0];
+
+    document.getElementById("userName")
+    .innerText = nombre;
+    // cargar resultado phishing
+    cargarPhishing(user.uid);
+    cargarSmishing(user.uid);
+    cargarVishing(user.uid);
+    cargarQrPhishing(user.uid);
+    
+
+  }else{
+    window.location.href="login.html";
+  }
+});
 </script>
+
+<button class="logout-btn" onclick="cerrarSesion()">Cerrar sesión</button>
+<script>
+function cerrarSesion() {
+  window.location.href = "index.html";
+}
+</script>
+
+
 
 </body>
 </html>
