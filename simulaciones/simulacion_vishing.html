@@ -1,1 +1,763 @@
-<h1>hola vishing de cordero</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Simulación de Vishing</title>
+<style>
+  
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 20px;
+   line-height: 1.5; /* 🔥 nuevo */
+}
+
+.container {
+  max-width: 65ch; /* 🔥 clave (60–70 caracteres) */
+  margin: auto;
+}
+
+.lista {
+  text-align: left;
+  margin: 15px 0;
+  padding-left: 20px;
+  color: #cbd5f5;
+  line-height: 1.7;
+}
+
+.box {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+h2, #titulo {
+  text-align: center;
+}
+
+.btn {
+  text-align: center;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.cancel-btn {
+  position: fixed; /* 🔥 lo deja fijo en pantalla */
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.cancel-btn:hover {
+  background: #dc2626;
+}
+
+
+/* 📘 INTRO */
+.intro h2 {
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cbd5f5;
+}
+
+/* Botón general */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background: #2b3bf1;
+}
+
+/* Barra progreso */
+.progress {
+  height: 8px;
+  background: #1e293b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #38bdf8;
+  width: 0%;
+}
+
+
+/* 🔥 BOTÓN FALSO (sin borde azul) */
+.fake-btn {
+  display: inline-block;
+  background: #e8431a;
+  color: rgb(10, 10, 10);
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 🔴 ELIMINA EL RECUADRO AZUL */
+.fake-btn:focus,
+.fake-btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Opciones */
+#opciones .btn {
+  margin-top: 10px;
+}
+
+.feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+}
+
+.correcto {
+  background: #14532d;
+}
+
+.incorrecto {
+  background: #7f1d1d;
+}
+
+.pregunta {
+  text-align: center;
+}
+
+
+/* Diseño llamada Vishing */
+
+.call {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 15px;
+  color: #1e293b;
+  text-align: left;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+
+.call-header {
+  background: #e2e8f0;
+  padding: 15px;
+  border-radius: 10px;
+  color: #0f172a;
+  font-size: 14px;
+  border-bottom: 2px solid #38bdf8;
+}
+
+
+.call-body {
+  margin-top: 20px;
+  background: #f8fafc;
+  padding: 18px;
+  border-radius: 10px;
+  line-height: 1.8;
+  color: #334155;
+  font-size: 15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app"></div>
+
+<script type="module">
+
+
+window.cancelarTest = function() {
+  const confirmar = confirm("¿Seguro que quieres salir del test?");
+  
+  if (confirmar) {
+    window.location.href = "../simulaciones.html"; // 🔥 cambia por tu ruta real
+  }
+}
+
+
+function mezclarArray(array) {
+  let copia = [...array];
+
+  for (let i = copia.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+
+  return copia;
+}
+
+// ================== INTRO ==================
+function mostrarIntro() {
+preguntas = mezclarArray(preguntas);
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="box intro">
+     <h2>¿Qué es el Vishing?</h2>
+
+<p>
+El <b>vishing</b> (voice phishing) es un tipo de ataque de ingeniería social
+en el que un atacante utiliza llamadas telefónicas falsas para engañar a una
+persona y obtener información confidencial.
+</p>
+
+<p>
+Generalmente, los atacantes se hacen pasar por empleados de bancos,
+empresas, servicios técnicos o instituciones conocidas para generar confianza
+y convencer a la víctima de proporcionar datos personales.
+</p>
+
+<p>
+<b>¿Cuál es la finalidad?</b><br>
+El objetivo principal es obtener información sensible como contraseñas,
+datos bancarios, códigos de verificación o información personal para acceder
+a cuentas o realizar fraudes.
+</p>
+
+<p>
+<b>¿Para qué usan tus datos?</b><br>
+Los atacantes pueden utilizar la información obtenida para:
+</p>
+
+<ul class="lista">
+  <li>Robar dinero de cuentas bancarias</li>
+  <li>Acceder a cuentas personales mediante códigos de seguridad</li>
+  <li>Suplantar la identidad de la víctima</li>
+  <li>Realizar fraudes o compras no autorizadas</li>
+  <li>Vender información personal en mercados ilegales</li>
+</ul>
+
+<p>
+En esta simulación aprenderás a identificar llamadas sospechosas,
+reconocer señales de alerta y evitar compartir información con personas
+desconocidas que intenten manipularte.
+</p>
+      <button class="btn" onclick="iniciarSimulacion()">
+        Comenzar simulación
+      </button>
+    </div>
+  `;
+}
+
+// ================== QUIZ ==================
+
+
+let preguntas = [
+
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="call">
+<div class="call-header">
+📞 Llamada entrante<br>
+<strong>Centro de seguridad bancaria</strong><br>
+Número: 55-7845-2190
+</div>
+<div class="call-body">
+El asesor indica:
+<br><br>
+"Buenos días. Le llamamos del área de seguridad de su banco.
+Detectamos un intento de compra poco habitual con su tarjeta
+realizado recientemente."
+<br><br>
+"Antes de continuar, queremos confirmar si usted reconoce
+esta operación."
+<br><br>
+"Por seguridad, no le solicitaremos contraseñas, NIP ni códigos
+enviados por mensaje. Si tiene dudas puede comunicarse directamente
+desde la aplicación oficial o el número que aparece en su tarjeta."
+<br><br>
+"¿Reconoce usted esta compra realizada por $2,500 pesos?"
+</div>
+</div>
+<p class="pregunta"><b>¿Es una llamada confiable?</b></p>
+`,
+opciones:[
+{
+texto:"Sí, porque no solicita información confidencial y permite verificar por canales oficiales",
+correcta:true
+},
+{
+texto:"No, cualquier llamada bancaria es un intento de fraude",
+correcta:false
+}
+],
+explicacion:
+"Algunas instituciones pueden realizar llamadas de seguridad para confirmar movimientos. La diferencia es que no solicitan información secreta como contraseñas, NIP o códigos de verificación."
+},
+
+
+
+
+
+{
+contenido:`
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="call">
+<div class="call-header">
+📞 Llamada de soporte técnico<br>
+<strong>Supuesto departamento de seguridad informática</strong><br>
+Número: 800-456-8899
+</div>
+<div class="call-body">
+"Buenos días. Le llamamos del área de soporte técnico.
+Hemos detectado actividad sospechosa y varios errores
+de seguridad en su computadora."
+<br><br>
+"Es posible que un atacante esté intentando robar sus datos.
+Para solucionar el problema necesitamos que descargue una
+herramienta de soporte remoto."
+<br><br>
+"Cuando la instale, indíquenos el código que aparece en pantalla
+para que nuestro técnico pueda conectarse y eliminar la amenaza."
+<br><br>
+"No cierre la llamada, el problema podría empeorar si espera."
+</div>
+</div>
+<p class="pregunta"><b>¿Es una llamada confiable?</b></p>
+`,
+opciones:[
+{
+texto:"Sí, porque ofrecen solucionar un problema de seguridad",
+correcta:false
+},
+{
+texto:"No, solicitan instalar software y permitir acceso remoto",
+correcta:true
+}
+],
+explicacion:
+"Los falsos técnicos usan miedo y urgencia para convencer a la víctima de instalar programas que permiten controlar su computadora y robar información."
+},
+
+
+{
+contenido:`
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="call">
+<div class="call-header">
+📞 Llamada desconocida<br>
+<strong>Número no registrado</strong><br>
+Número: 55-9367-4821
+</div>
+<div class="call-body">
+Recibes una llamada de un número desconocido.
+<br><br>
+Al contestar, no escuchas a ninguna persona.
+La llamada permanece en silencio durante unos segundos
+y después se corta automáticamente.
+<br><br>
+Más tarde recibes nuevas llamadas de números diferentes
+que tampoco reconoces.
+<br><br>
+No proporcionaste información personal ni realizaste ninguna
+acción durante la llamada.
+</div>
+</div>
+<p class="pregunta"><b>
+¿Qué podría estar ocurriendo en esta situación?
+</b></p>
+`,
+opciones:[
+{
+texto:"Puede ser una llamada automática para comprobar que el número está activo y preparar futuras llamadas no deseadas",
+correcta:true
+},
+{
+texto:"Es una señal segura de que alguien necesita comunicarse urgentemente conmigo",
+correcta:false
+},
+{
+texto:"Debo devolver la llamada para saber quién era",
+correcta:false
+},
+{
+texto:"Si no respondí información, entonces no existe ningún riesgo",
+correcta:false
+}
+],
+explicacion:
+"Algunas campañas utilizan sistemas automáticos que realizan llamadas para identificar números activos. Si una persona responde, los atacantes pueden registrar que la línea está en uso y utilizarla posteriormente para campañas de spam, fraude o intentos de vishing. Por eso es recomendable evitar devolver llamadas desconocidas y no confirmar información personal."
+},
+
+
+{
+contenido:`
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="call">
+<div class="call-header">
+📞 Llamada de número desconocido<br>
+<strong>Supuesto familiar en emergencia</strong><br>
+Número: Privado
+</div>
+<div class="call-body">
+"Hola, soy yo. Tuve un problema y estoy usando otro teléfono
+porque perdí el mío."
+<br><br>
+"No puedo hablar mucho porque estoy en una situación complicada.
+Necesito que me ayudes rápidamente."
+<br><br>
+"Tuve un accidente y necesito dinero para resolverlo.
+Por favor realiza una transferencia a esta cuenta."
+<br><br>
+"Después te explico todo, pero necesito que lo hagas ahora."
+</div>
+</div>
+<p class="pregunta"><b>¿Qué debería hacer la persona?</b></p>
+`,
+opciones:[
+{
+texto:"Realizar la transferencia porque parece una emergencia",
+correcta:false
+},
+{
+texto:"Confirmar la identidad mediante otra vía antes de ayudar",
+correcta:true
+}
+],
+explicacion:
+"Los atacantes aprovechan emociones como miedo, preocupación y urgencia. Antes de enviar dinero es importante verificar la identidad de la persona por otro medio."
+},
+
+
+{
+contenido:`
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="call">
+<div class="call-header">
+📞 Llamada sospechosa<br>
+<strong>Supuesto asesor de Mercado Libre</strong>
+<br>
+Número: 55-7842-1930
+</div>
+<div class="call-body">
+"Hola, le llamamos del área de seguridad de Mercado Libre.
+Detectamos un intento de compra sospechoso utilizando su cuenta."
+<br><br>
+"Para cancelar la operación necesitamos verificar que usted
+es el propietario de la cuenta."
+<br><br>
+"Le enviamos un código por WhatsApp.
+Por favor dígame el código de 6 números para confirmar su identidad."
+</div>
+</div>
+<p class="pregunta"><b>¿Es una llamada confiable?</b></p>
+`,
+opciones:[
+{
+texto:"Si, Compartir el código para cancelar la compra",
+correcta:false
+},
+{
+texto:"No compartir el código y contactar a Mercado Libre desde la aplicación oficial",
+correcta:true
+}
+],
+
+explicacion:
+"Los códigos de verificación son privados. Los atacantes los solicitan para tomar control de cuentas y realizar fraudes."
+},
+
+
+{
+contenido:`
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="call">
+<div class="call-header">
+📞 Llamada de servicio<br>
+<strong>Centro de atención bancaria</strong>
+<br>
+Número: 800-123-4567
+</div>
+<div class="call-body">
+"Buenos días. Le llamamos del banco para confirmar
+una compra reciente realizada con su tarjeta."
+<br><br>
+"Por seguridad, no le solicitaremos contraseñas,
+NIP ni códigos enviados por mensaje."
+<br><br>
+"Puede revisar los movimientos desde la aplicación oficial
+o comunicarse directamente con nuestro número de atención
+si tiene alguna duda."
+</div>
+</div>
+<p class="pregunta"><b>¿Es una llamada confiable?</b></p>
+`,
+opciones:[
+{
+texto:"Sí, porque no solicita información confidencial y permite verificar por canales oficiales",
+correcta:true
+},
+{
+texto:"No, todas las llamadas bancarias son intentos de fraude",
+correcta:false
+}
+],
+explicacion:
+"Una llamada legítima puede realizar verificaciones básicas, pero nunca debe solicitar contraseñas, NIP o códigos de seguridad. Siempre es recomendable confirmar mediante canales oficiales."
+}
+
+
+];
+
+
+// VARIABLES
+let actual = 0;
+let puntos = 0;
+
+// INICIAR QUIZ
+window.iniciarSimulacion = function () {
+  document.getElementById("app").innerHTML = `
+    <h2 id="titulo"></h2>
+    <div class="progress">
+      <div class="progress-bar" id="barra"></div>
+    </div>
+    <div class="box" id="contenido"></div>
+    <div id="opciones"></div>
+    <p id="feedback"></p>
+  `;
+  mostrarPregunta();
+};
+
+// MOSTRAR PREGUNTA
+function mostrarPregunta() {
+  let p = preguntas[actual];
+
+  document.getElementById("titulo").innerText =
+    "Simulación (" + (actual + 1) + " de " + preguntas.length + ")";
+
+  document.getElementById("contenido").innerHTML = p.contenido;
+
+  let opcionesDiv = document.getElementById("opciones");
+  opcionesDiv.innerHTML = "";
+
+  p.opciones.forEach(op => {
+    let btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = op.texto;
+    btn.onclick = () => responder(op.correcta, p.explicacion);
+    opcionesDiv.appendChild(btn);
+  });
+
+  document.getElementById("barra").style.width =
+    ((actual) / preguntas.length) * 100 + "%";
+}
+
+
+
+// RESPONDER
+function responder(correcta, explicacion) {
+  let feedback = document.getElementById("feedback");
+
+  if (correcta) {
+    puntos++;
+    feedback.innerHTML = `
+      <div class="feedback correcto">
+        ✅ Correcto<br>${explicacion}
+      </div>`;
+  } else {
+    feedback.innerHTML = `
+      <div class="feedback incorrecto">
+        ❌ Incorrecto<br>${explicacion}
+      </div>`;
+  }
+
+  // 🔒 Desactivar botones
+  let botones = document.querySelectorAll("#opciones .btn");
+  botones.forEach(b => b.disabled = true);
+
+  // 👉 Botón siguiente
+  let siguienteBtn = document.createElement("button");
+  siguienteBtn.className = "btn";
+  siguienteBtn.innerText = "Siguiente";
+
+  siguienteBtn.onclick = () => {
+    actual++;
+
+    if (actual < preguntas.length) {
+      mostrarPregunta();
+      document.getElementById("feedback").innerHTML = "";
+    } else {
+      terminar();
+    }
+  };
+
+  document.getElementById("feedback").appendChild(siguienteBtn);
+}
+
+// FINAL
+async function terminar() {
+
+  let calificacion = Math.round(
+    (puntos / preguntas.length) * 100
+  );
+
+
+  while (!window.authCargada) {
+    await new Promise(resolve => setTimeout(resolve,100));
+  }
+
+
+  if (!window.usuarioActual) {
+    alert("Debes iniciar sesión");
+    return;
+  }
+
+
+  try {
+
+    await window.setDoc(
+
+      window.doc(
+        window.db,
+        "usuarios",
+        window.usuarioActual.uid,
+        "resultados",
+        "vishing"
+      ),
+
+      {
+
+        nombre: window.usuarioActual.displayName ||
+                window.usuarioActual.email.split("@")[0],
+        email: window.usuarioActual.email,
+        tipo: "Vishing",
+        estado: "Completada",
+        puntos: puntos,
+        total: preguntas.length,
+        calificacion: calificacion,
+        fecha: new Date()
+      }
+    );
+
+
+  } catch (e) {
+    console.error(
+      "Error guardando resultado:",
+      e
+    );
+
+  }
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="box">
+      <h2>Resultado final</h2>
+
+      <p>
+        Puntaje:
+        ${puntos} / ${preguntas.length}
+      </p>
+
+      <p>
+        Calificación:
+        ${calificacion}%
+      </p>
+
+      <p>
+        Estado:
+        Completado
+      </p>
+
+      <button 
+      class="btn" 
+      onclick="location.reload()">
+        Reintentar
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='/dashboard.html'">
+        ⌂ Ir al inicio
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='../simulaciones.html'">
+        ⎔ Ver simulaciones
+      </button>
+
+
+    </div>
+
+  `;
+}
+
+// INICIAR
+mostrarIntro();
+
+</script>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+    authDomain: "cybersecurity-1710f.firebaseapp.com",
+    projectId: "cybersecurity-1710f",
+    storageBucket: "cybersecurity-1710f.firebasestorage.app",
+    messagingSenderId: "179436600475",
+    appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🌍 HACER GLOBAL
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+window.usuarioActual = null;
+window.authCargada = false;
+
+// 👤 DETECTAR USUARIO
+onAuthStateChanged(auth, (user) => {
+
+  window.usuarioActual = user;
+  window.authCargada = true;
+
+});
+</script>
+
+</body>
+</html>
