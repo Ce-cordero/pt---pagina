@@ -548,6 +548,54 @@ async function cargarVishing(uid){
 }
 
 
+/*cargarSpearPhishing*/
+
+async function cargarSpearPhishing(uid){
+  const referencia = doc(
+    db,
+    "usuarios",
+    uid,
+    "resultados",
+    "SpearPhishing"
+  );
+
+  const resultado = await getDoc(referencia);
+
+  if(resultado.exists()){
+    const datos = resultado.data();
+
+    let fecha = datos.fecha.toDate();
+
+    document.getElementById("fechaSpear").innerText =
+      fecha.toLocaleDateString("es-MX", {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      });
+
+    document.getElementById("puntosSpear").innerText =
+      datos.calificacion + " pts";
+
+    document.getElementById("estadoSpear").innerText =
+      "Completada";
+
+    document.getElementById("estadoSpear").className =
+      "estado detectado";
+
+  } else {
+
+    document.getElementById("fechaSpear").innerText =
+      "Sin realizar";
+
+    document.getElementById("puntosSpear").innerText =
+      "0 pts";
+
+    document.getElementById("estadoSpear").innerText =
+      "Pendiente";
+  }
+}
+
+
 /*cargarQrPhishing*/
 async function cargarQrPhishing(uid){
   const referencia = doc(
@@ -605,6 +653,7 @@ onAuthStateChanged(auth, (user)=>{
     cargarSmishing(user.uid);
     cargarVishing(user.uid);
     cargarQrPhishing(user.uid);
+    cargarSpearPhishing(user.uid);
     
 
   }else{
