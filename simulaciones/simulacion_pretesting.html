@@ -1,301 +1,524 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<head> <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<title>simulacion Pretesting</title>
-
+<title>Simulación de Phishing</title>
 <style>
+  
 body {
-  font-family: Arial;
   background: #0f172a;
-  color: white;
-  text-align: center;
+  color: #e5e7eb;
+  font-family: Arial, Helvetica, sans-serif;
   padding: 20px;
+   line-height: 1.5; /* 🔥 nuevo */
+}
+
+.container {
+  max-width: 65ch; /* 🔥 clave (60–70 caracteres) */
+  margin: auto;
+}
+
+.lista {
+  text-align: left;
+  margin: 15px 0;
+  padding-left: 20px;
+  color: #cbd5f5;
+  line-height: 1.7;
 }
 
 .box {
   background: #1e293b;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 400px;
-  margin: auto;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+h2, #titulo {
+  text-align: center;
 }
 
 .btn {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  border-radius: 6px;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 12px;
+}
+
+.cancel-btn {
+  position: fixed; /* 🔥 lo deja fijo en pantalla */
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
   border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.cancel-btn:hover {
+  background: #dc2626;
+}
+
+
+/* 📘 INTRO */
+.intro h2 {
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cbd5f5;
+}
+
+/* Botón general */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
   background: #2563eb;
   color: white;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.feedback {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
+.btn:hover {
+  background: #2b3bf1;
 }
 
-.correcto { background: #14532d; }
-.incorrecto { background: #7f1d1d; }
-
+/* Barra progreso */
 .progress {
-  background: #334155;
-  height: 10px;
+  height: 8px;
+  background: #1e293b;
   border-radius: 10px;
   overflow: hidden;
 }
 
 .progress-bar {
-  height: 10px;
-  background: #22c55e;
+  height: 100%;
+  background: #38bdf8;
   width: 0%;
 }
+
+/* Gmail estilo */
+.email {
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 14px;
+  color: #202124;
+  text-align: left;
+}
+
+.email-header {
+  border-bottom: 1px solid #dadce0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+/* 🔴 CORREGIDO: evita estilos de enlace */
+.email a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 🔥 BOTÓN FALSO (sin borde azul) */
+.fake-btn {
+  display: inline-block;
+  background: #e8431a;
+  color: rgb(10, 10, 10);
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 🔴 ELIMINA EL RECUADRO AZUL */
+.fake-btn:focus,
+.fake-btn:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Opciones */
+#opciones .btn {
+  margin-top: 10px;
+}
+
+.feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+}
+
+.correcto {
+  background: #14532d;
+}
+
+.incorrecto {
+  background: #7f1d1d;
+}
+
 </style>
 </head>
 
 <body>
-<div id="app"></div>
+
+<div class="container" id="app"></div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-// FIREBASE
-const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH",
-  projectId: "TU_PROJECT",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// GLOBAL
-window.db = db;
-window.setDoc = setDoc;
-window.doc = doc;
-
-// VARIABLES
-let indice = 0;
-let puntos = 0;
-
-// PREGUNTAS
-const preguntas = [
-
-{
-contenido: `<p><b>¿Qué es phishing?</b></p>`,
-opciones: [
-{ texto: "Ataque por correo falso", correcta: true },
-{ texto: "Virus del sistema", correcta: false }
-],
-explicacion: "Phishing busca robar datos con correos falsos."
-},
-
-{
-contenido: `<p><b>¿Qué es smishing?</b></p>`,
-opciones: [
-{ texto: "Fraude por SMS", correcta: true },
-{ texto: "Ataque por WiFi", correcta: false }
-],
-explicacion: "Smishing usa mensajes SMS para engañar."
-},
-
-{
-contenido: `<p><b>¿Qué es vishing?</b></p>`,
-opciones: [
-{ texto: "Fraude por llamadas", correcta: true },
-{ texto: "Correo malicioso", correcta: false }
-],
-explicacion: "Vishing usa llamadas telefónicas."
-},
-
-{
-contenido: `<p><b>¿Qué debes hacer ante un enlace sospechoso?</b></p>`,
-opciones: [
-{ texto: "No abrirlo", correcta: true },
-{ texto: "Abrirlo rápido", correcta: false }
-],
-explicacion: "Nunca abras enlaces sospechosos."
-},
-
-{
-contenido: `<p><b>¿Qué buscan los atacantes?</b></p>`,
-opciones: [
-{ texto: "Datos personales", correcta: true },
-{ texto: "Ayudarte", correcta: false }
-],
-explicacion: "Buscan robar información."
+window.cancelarTest = function() {
+  const confirmar = confirm("¿Seguro que quieres salir del test?");
+  
+  if (confirmar) {
+    window.location.href = "../simulaciones.html"; // 🔥 cambia por tu ruta real
+  }
 }
 
-];
 
-// INTRO
+function mezclarArray(array) {
+  let copia = [...array];
+
+  for (let i = copia.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+
+  return copia;
+}
+
+// ================== INTRO ==================
 function mostrarIntro() {
+preguntas = mezclarArray(preguntas);
+
   document.getElementById("app").innerHTML = `
-    <div class="box">
-     <h2>¿Qué es el Pretexting?</h2>
+
+    <div class="box intro">
+<h2>¿Qué es el Pretexting?</h2>
 
 <p>
-El <b>pretexting</b> es un tipo de ataque de <b>ingeniería social</b> en el que
-un atacante crea una historia falsa o identidad ficticia para engañar a una persona
-y obtener información confidencial.
+El <b>pretexting</b> es un tipo de ataque de ingeniería social en el que un atacante
+crea una historia o identidad falsa para ganarse tu confianza y obtener información.
 </p>
 
 <p>
-A diferencia de otros ataques, el pretexting se basa en la <b>manipulación psicológica</b>,
-donde el atacante gana la confianza de la víctima haciéndose pasar por alguien legítimo,
-como un empleado de banco, soporte técnico o una institución oficial.
+El atacante suele hacerse pasar por alguien confiable, como personal de soporte técnico,
+un banco, recursos humanos o incluso un compañero de trabajo.
 </p>
 
 <p>
 <b>¿Cuál es la finalidad?</b><br>
-El objetivo principal es convencerte de que proporciones datos sensibles como:
-</p>
-
-<p style="text-align:left;">
-• Contraseñas<br>
-• Información bancaria<br>
-• Datos personales<br>
-• Códigos de verificación<br>
+El objetivo es manipularte para que proporciones datos sensibles o realices acciones
+que comprometan tu seguridad.
 </p>
 
 <p>
-<b>¿Cómo te afecta?</b><br>
-Si caes en este tipo de ataque, los delincuentes pueden:
+<b>¿Para qué usan tu información?</b><br>
+Los atacantes pueden utilizar los datos obtenidos para:
 </p>
 
-<p style="text-align:left;">
-• Robar tu identidad<br>
-• Acceder a tus cuentas<br>
-• Realizar fraudes a tu nombre<br>
-• Obtener acceso a sistemas privados<br>
-</p>
+<ul class="lista">
+  <li>Acceder a cuentas personales o empresariales</li>
+  <li>Robar identidad o suplantar a la víctima</li>
+  <li>Realizar fraudes financieros</li>
+  <li>Obtener acceso a sistemas internos</li>
+  <li>Recopilar más información para futuros ataques</li>
+</ul>
 
 <p>
-<b>¿Cómo identificar un ataque de pretexting?</b>
+En esta simulación aprenderás a identificar historias falsas
+y a no confiar en solicitudes que intentan presionarte o parecer urgentes.
 </p>
-
-<p style="text-align:left;">
-• Personas que se hacen pasar por autoridades o empresas<br>
-• Solicitudes urgentes de información confidencial<br>
-• Historias creíbles pero no verificables<br>
-• Presión para actuar rápidamente<br>
-• Peticiones inusuales fuera de procesos normales<br>
-</p>
-
-<p>
-En esta simulación evaluarás tu capacidad para detectar
-cuando alguien intenta manipularte mediante un pretexto falso.
-</p>
-
-<button class="btn" onclick="iniciar()">
-  Comenzar evaluación
-</button>
-  `;
-}
-
-// START
-window.iniciar = function() {
-  indice = 0;
-  puntos = 0;
-  mostrarPregunta();
-}
-
-// PREGUNTA
-function mostrarPregunta() {
-  let p = preguntas[indice];
-  let progreso = (indice / preguntas.length) * 100;
-
-  let html = `
-  <div class="box">
-    <div class="progress">
-      <div class="progress-bar" style="width:${progreso}%"></div>
+      <button class="btn" onclick="iniciarSimulacion()">
+        Comenzar simulación
+      </button>
     </div>
-
-    <p>${indice+1} / ${preguntas.length}</p>
-    ${p.contenido}
   `;
+}
 
-  p.opciones.forEach((op,i)=>{
-    html += `<button class="btn" onclick="responder(${i})">${op.texto}</button>`;
+// ================== QUIZ ==================
+
+
+let preguntas = [
+
+{
+contenido: `
+<button class="cancel-btn" onclick="cancelarTest()">Volver a simulaciones</button>
+<div class="email">
+<div class="email-header">
+<strong>De:</strong> UAM Unidad Cuajimalpa &lt;UAMActuBien@gmail.com&gt;<br>
+<strong>Asunto:</strong> Actualizar cuenta de correoelectronico Biembenidos a la UAM Unidad Cuajimalpa
+</div>
+<div>
+Bienbenido a la Uam Unidad Cuajimalpa<br><br>
+Nos guataria informarle de que actualmente estamos llevendo a cabo el mantenimiento programado y actualizacion de nuestra cuenta de servicio y como resultado de esta su cuenta tiene que ser suspendida<br><br>
+
+Pedimos disculpas por cualquier inconveniente causado. Para mantener su cuenta, ustes deve responder a este correo electronico de inmediato  introdusca la informacion siguiente:<br><br>
+
+ID de usuario:<br>
+Contraceña:<br><br>
+
+Si no lo hace dentro de las 72 horas imediatamente hara que que su cuenta quede desactivada de nuestra base de datos.<br><br>
+
+Gracias por usar nestros servicios.
+<br><br>
+
+<a href="#" class="fake-btn">Restablecer acceso</a>
+</div>
+</div>
+<p><b>¿Este correo es confiable?</b></p>
+`,
+opciones: [
+{ texto: "Sí, es legítimo", correcta: false },
+{ texto: "No, es phishing", correcta: true }
+],
+explicacion: "Usa urgencia y dirección del remitente falso"
+},
+
+
+];
+
+
+// VARIABLES
+let actual = 0;
+let puntos = 0;
+
+// INICIAR QUIZ
+window.iniciarSimulacion = function () {
+  document.getElementById("app").innerHTML = `
+    <h2 id="titulo"></h2>
+    <div class="progress">
+      <div class="progress-bar" id="barra"></div>
+    </div>
+    <div class="box" id="contenido"></div>
+    <div id="opciones"></div>
+    <p id="feedback"></p>
+  `;
+  mostrarPregunta();
+};
+
+// MOSTRAR PREGUNTA
+function mostrarPregunta() {
+  let p = preguntas[actual];
+
+  document.getElementById("titulo").innerText =
+    "Simulación (" + (actual + 1) + " de " + preguntas.length + ")";
+
+  document.getElementById("contenido").innerHTML = p.contenido;
+
+  let opcionesDiv = document.getElementById("opciones");
+  opcionesDiv.innerHTML = "";
+
+  p.opciones.forEach(op => {
+    let btn = document.createElement("button");
+    btn.className = "btn";
+    btn.innerText = op.texto;
+    btn.onclick = () => responder(op.correcta, p.explicacion);
+    opcionesDiv.appendChild(btn);
   });
 
-  html += `<div id="feedback"></div></div>`;
-  document.getElementById("app").innerHTML = html;
+  document.getElementById("barra").style.width =
+    ((actual) / preguntas.length) * 100 + "%";
 }
 
-// RESPUESTA
-window.responder = function(i) {
-  let p = preguntas[indice];
-  let botones = document.querySelectorAll(".btn");
 
-  botones.forEach(b=>b.disabled=true);
 
-  let fb = document.getElementById("feedback");
+// RESPONDER
+function responder(correcta, explicacion) {
+  let feedback = document.getElementById("feedback");
 
-  if(p.opciones[i].correcta){
+  if (correcta) {
     puntos++;
-    fb.innerHTML = `<div class="feedback correcto">Correcto</div>`;
+    feedback.innerHTML = `
+      <div class="feedback correcto">
+        ✅ Correcto<br>${explicacion}
+      </div>`;
   } else {
-    fb.innerHTML = `<div class="feedback incorrecto">Incorrecto</div>`;
+    feedback.innerHTML = `
+      <div class="feedback incorrecto">
+        ❌ Incorrecto<br>${explicacion}
+      </div>`;
   }
 
-  setTimeout(()=>{
-    indice++;
-    if(indice < preguntas.length){
+  // 🔒 Desactivar botones
+  let botones = document.querySelectorAll("#opciones .btn");
+  botones.forEach(b => b.disabled = true);
+
+  // 👉 Botón siguiente
+  let siguienteBtn = document.createElement("button");
+  siguienteBtn.className = "btn";
+  siguienteBtn.innerText = "Siguiente";
+
+  siguienteBtn.onclick = () => {
+    actual++;
+
+    if (actual < preguntas.length) {
       mostrarPregunta();
+      document.getElementById("feedback").innerHTML = "";
     } else {
       terminar();
     }
-  },1500);
+  };
+
+  document.getElementById("feedback").appendChild(siguienteBtn);
 }
 
 // FINAL
 async function terminar() {
 
-  let nivel = "";
-  if (puntos === 5) nivel = "Alto 🟢";
-  else if (puntos >= 3) nivel = "Medio 🟡";
-  else nivel = "Bajo 🔴";
+  let calificacion = Math.round(
+    (puntos / preguntas.length) * 100
+  );
 
-  // 🔥 GUARDAR COMO PRETEST
+
+  while (!window.authCargada) {
+    await new Promise(resolve => setTimeout(resolve,100));
+  }
+
+
+  if (!window.usuarioActual) {
+    alert("Debes iniciar sesión");
+    return;
+  }
+
+
   try {
+
     await window.setDoc(
-      window.doc(window.db, "pretest", Date.now().toString()),
+
+      window.doc(
+        window.db,
+        "usuarios",
+        window.usuarioActual.uid,
+        "resultados",
+        "phishing"
+      ),
+
       {
-        puntos,
+
+        nombre: window.usuarioActual.displayName ||
+                window.usuarioActual.email.split("@")[0],
+        email: window.usuarioActual.email,
+        tipo: "Phishing",
+        estado: "Completada",
+        puntos: puntos,
         total: preguntas.length,
-        nivel,
-        tipo: "pretest",
-        fecha: new Date().toISOString()
+        calificacion: calificacion,
+        fecha: new Date()
       }
     );
-  } catch(e) {
-    console.error(e);
+
+
+  } catch (e) {
+    console.error(
+      "Error guardando resultado:",
+      e
+    );
+
   }
 
   document.getElementById("app").innerHTML = `
-  <div class="box">
-    <h2>Resultado</h2>
-    <p>${puntos} / ${preguntas.length}</p>
-    <p>${nivel}</p>
 
-    <button class="btn" onclick="location.reload()">Reintentar</button>
+    <div class="box">
+      <h2>Resultado final</h2>
 
-    <button class="btn" onclick="window.location.href='simulaciones.html'">
-      Continuar a simulaciones
-    </button>
-  </div>
+      <p>
+        Puntaje:
+        ${puntos} / ${preguntas.length}
+      </p>
+
+      <p>
+        Calificación:
+        ${calificacion}%
+      </p>
+
+      <p>
+        Estado:
+        Completado
+      </p>
+
+      <button 
+      class="btn" 
+      onclick="location.reload()">
+        Reintentar
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='../dashboard.html'">
+        ⌂ Ir al inicio
+      </button>
+
+
+      <button 
+      class="btn" 
+      onclick="window.location.href='../simulaciones.html'">
+        ⎔ Ver simulaciones
+      </button>
+
+
+    </div>
+
   `;
 }
 
-// INIT
+// INICIAR
 mostrarIntro();
 
 </script>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXPWOlOJcU06IeH1hG87OUbuqljjEewAI",
+    authDomain: "cybersecurity-1710f.firebaseapp.com",
+    projectId: "cybersecurity-1710f",
+    storageBucket: "cybersecurity-1710f.firebasestorage.app",
+    messagingSenderId: "179436600475",
+    appId: "1:179436600475:web:81c029bac9b3adc2c1da3e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🌍 HACER GLOBAL
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+window.usuarioActual = null;
+window.authCargada = false;
+
+// 👤 DETECTAR USUARIO
+onAuthStateChanged(auth, (user) => {
+
+  window.usuarioActual = user;
+  window.authCargada = true;
+
+});
+</script>
+
 </body>
 </html>
